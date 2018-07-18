@@ -5,7 +5,7 @@ define: /Users/yoelw/CurrentLx/OldNorse/verbtopic.def
 coding_query:
 
 // time period
-6: {
+5: {
 	\1150: (*1150* inID)
 	\1210: (*1210* inID)
 	\1250: (*1250* inID)
@@ -120,7 +120,7 @@ ofsi: (*2008.OF* inID)
         xxxtext: ELSE
 }
 
-8: {
+6: {
 	nar: (*NAR-* inID)
 	rel: (*REL-* inID)
 	bio: (*BIO-* inID)
