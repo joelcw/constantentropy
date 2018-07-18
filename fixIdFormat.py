@@ -1,5 +1,5 @@
-#26Feb2016
-#Script takes the output of CS extracting codes with printing token ids, and converts the id into a coding column for text; so it changes @ to : and removes token number
+#18July2018
+#Script takes the output of CS extracting codes with printing token ids, and converts the id into a coding column for text; so it changes @ to : and removes token number, and makes all ids lower case for simplicity in dealing with metadata
 
 import sys,string,re
 
@@ -16,4 +16,4 @@ lines = sys.stdin.readlines()
 
 for line in lines:
     new = idregex.sub(textid,line)
-    sys.stdout.write(new)
+    sys.stdout.write(new.lower())
