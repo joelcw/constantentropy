@@ -21,31 +21,31 @@ rm infoTheoryTest.ymeb.cod
 $CS infoTheoryTest.c $ycoe $ppcme2 $ppceme $ppcmbe -out infoTheoryTest.ymeb.cod
 
 rm infoTheoryTest.ymeb.cod.ooo
-$CS codes.q infoTheoryTest.ymeb.cod
+$CS codes.q queriesandoutput/infoTheoryTest.ymeb.cod
 
 "Done with study on ppche"
 
-python fixIdFormat.py < infoTheoryTest.ymeb.cod.ooo > infoTheoryTest.ymeb.cod.ooo.tmp
-mv infoTheoryTest.ymeb.cod.ooo.tmp infoTheoryTest.ymeb.cod.ooo
+python fixIdFormat.py < queriesandoutput/infoTheoryTest.ymeb.cod.ooo > queriesandoutput/infoTheoryTest.ymeb.cod.ooo.tmp
+mv queriesandoutput/infoTheoryTest.ymeb.cod.ooo.tmp queriesandoutput/infoTheoryTest.ymeb.cod.ooo
 
 echo "Fixed codes"
 
-rm infoTheoryTest.ice.nodates.cod
-$CS infoTheoryTest.c $icepahc -out infoTheoryTest.ice.nodates.cod
+rm queriesandoutput/infoTheoryTest.ice.nodates.cod
+$CS infoTheoryTest.c $icepahc -out queriesandoutput/infoTheoryTest.ice.nodates.cod
 
 echo "done with study on IcePaHC"
 
-$CS dateGenre.ice.c infoTheoryTest.ice.nodates.cod -out infoTheoryTest.ice.cod
+$CS dateGenre.ice.c queriesandoutput/infoTheoryTest.ice.nodates.cod -out queriesandoutput/infoTheoryTest.ice.cod
 
 echo "done with dating IcePaHC data"
 
-rm infoTheoryTest.ice.cod.ooo
-$CS codes.q infoTheoryTest.ice.cod
+rm queriesandoutput/infoTheoryTest.ice.cod.ooo
+$CS codes.q queriesandoutput/infoTheoryTest.ice.cod
 
 "Done with study on icepahc"
 
-python fixIdFormat.py < infoTheoryTest.ice.cod.ooo > infoTheoryTest.ice.cod.ooo.tmp
-mv infoTheoryTest.ice.cod.ooo.tmp infoTheoryTest.ice.cod.ooo
+python fixIdFormat.py < queriesandoutput/infoTheoryTest.ice.cod.ooo > queriesandoutput/infoTheoryTest.ice.cod.ooo.tmp
+mv queriesandoutput/infoTheoryTest.ice.cod.ooo.tmp queriesandoutput/infoTheoryTest.ice.cod.ooo
 
 echo "Fixed codes"
 
