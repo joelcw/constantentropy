@@ -9,7 +9,7 @@ foo <- read.delim("infoTheoryTest.cod.ooo",header=F,sep=":")
 
 ####Give appropriate column names to the columns
 
-colnames(foo) <- c("OV","Clause","Year","sbj")
+colnames(foo) <- c("OV","Clause","ObjType","SbjType","Date",ID")
 
 
 ####Throw out all the codes that refer to tokens that are irrelevant for the study.

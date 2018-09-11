@@ -1,7 +1,7 @@
 //This query just finds the date for IcePaHC texts. There's definitely a more efficient way of doing this, but I don't feel like creating a metadata file right now.
 
 node: IP*
-define: /Users/yoelw/CurrentLx/OldNorse/verbtopic.def
+define: ../CurrentLx/OldNorse/verbtopic.def
 coding_query:
 
 // time period
@@ -54,6 +54,7 @@ coding_query:
       z:  ELSE
 
 }
+/*Below is not necessary if print_ID is used in codes.q, so I've commented it out
 
 7: {
 firstgrammar: (*1150.FI* inID) 
@@ -119,7 +120,7 @@ mamma: (*2008.MA* inID)
 ofsi: (*2008.OF* inID)
         xxxtext: ELSE
 }
-
+*/
 6: {
 	nar: (*NAR-* inID)
 	rel: (*REL-* inID)

@@ -26,8 +26,8 @@ coding_query:
 // MAT vs Qs with inversion vs other SUB clauses
 2: {
 	mat: (IP-MAT* idoms object) 
-
-    invq: (IP-SUB* idoms object) AND (IP-SUB* hassister !C)
+    //CONJ has to be excluded because the C is up a level in those cases:
+    invq: (IP-SUB* idoms object) AND (IP-SUB* hassister !C|CONJ*)
 
     	sub: (IP-SUB* idoms object) 
 
@@ -44,14 +44,12 @@ coding_query:
 */
 }
 
-//object status: pron, negative/quantified obj, positive
+//object status: pron, negative/quantified obj, positive. Qobj is put in the query before pronobj because it will appear before the pronobj in icelandic in rare cases like: Spyr-spyrja hirðmaður$-hirðmaður $inn-hinn ef-ef hann-hann vildi-vilja nökkverju-nokkur bæta-bæta honum-hann .-. (1275.MORKIN.NAR-HIS,.1294)
 
 3:{
 
- pronobj: (IP* idoms object) AND (object idomsonly PRO*)
-
     qobj: (IP* idoms object) AND (object idoms Q*|NUM*|NEG|ONE*)
-
+    pronobj: (IP* idoms object) AND (object idomsonly PRO*)
     posobj: (IP* idoms object) AND (object doms any_nominal|CONJ*|N*|D*)
 
     //Note that object traces will be in this later category and should be excluded:
@@ -59,11 +57,16 @@ coding_query:
   
 }
 
-//Subject status, including trace subjects 
+//Subject status, including trace subjects ; these will behave differently in dif construction types: in rel clauses, the last over thing was the comp or the wh-word, i.e. low info, or the head word with a zero comp, which is higher info (but english only, not ice); in Qs, the preceding thing is a wh-word, so low info. Note: subject must precede objects, or else all of the above is different, so no postposed subjects are considered here (including ambiguous quirky passives in early ice)
+
 4: {
- tracesbj: (IP* idoms NP-SBJ|NP-NOM) AND (NP-SBJ|NP-NOM idomsonly \**)
-     pronsbj: (IP* idoms NP-SBJ|NP-NOM) AND (NP-SBJ|NP-NOM idomsonly PRO*)
-     nomsbj: (IP* idoms NP-SBJ|NP-NOM) AND (NP-SBJ|NP-NOM doms any_nominal|CONJ*|N*|D*)
+  
+ gapsbj: ((IP* idoms NP-SBJ|NP-NOM) AND (NP-SBJ|NP-NOM idomsonly \**) AND (IP* idoms object) AND (NP-SBJ|NP-NOM precedes object)) OR (IP-*-*|IP-*=* idoms !NP-SBJ|NP-NOM)
+     
+     pronsbj: (IP* idoms NP-SBJ|NP-NOM) AND (NP-SBJ|NP-NOM idomsonly PRO*) AND (IP* idoms object) AND (NP-SBJ|NP-NOM precedes object)
+    
+     nomsbj: (IP* idoms NP-SBJ|NP-NOM) AND (NP-SBJ|NP-NOM doms any_nominal|CONJ*|N*|D*) AND (IP* idoms object) AND (NP-SBJ|NP-NOM precedes object)
+    
     z: ELSE
     }
 
