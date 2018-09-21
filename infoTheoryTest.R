@@ -55,9 +55,19 @@ objsbjNOinvq.data <- subset(objsbj.data, Clause != "invq")
 
 objsbjNOinvq.data <- droplevels(objsbjNOinvq.data)
 
-p <- ggplot(objsbjNOinvq.data, aes(Year, OV, color=SbjType,linetype=ObjType)) + labs(y = "Proportion of OV", x = "\nYear") + stat_sum(aes(size=..n.., alpha=.5)) + scale_size_area(max_size=12) + stat_smooth() + scale_alpha_continuous(guide="none", limits = c(0,.7)) + scale_color_brewer(palette = "Set1") + ylim(0,1) + facet_wrap(~Clause)
+p <- ggplot(objsbjNOinvq.data, aes(Year, OV, color=SbjType)) + 
+  labs(y = "Proportion of OV", x = "\nYear") + 
+  stat_sum(aes(size=..n.., alpha=.1)) + 
+  scale_size_area(max_size=12) + 
+  stat_smooth() + 
+  #aes(linetype=ObjType) +
+  #scale_linetype_manual(values=c("solid","dotted","dashed")) + 
+  scale_alpha_continuous(guide="none", limits = c(0,.7)) + 
+  scale_color_brewer(palette = "Set1") + 
+  ylim(0,1) + 
+  facet_grid(ObjType~Clause)
 
-ggsave(p, file = "infoTheory.objsbjmatsub.pdf", width = 8, height = 5)
+ggsave(p, file = "infoTheory.objsbjmatsub.English.pdf", width = 8, height = 5)
 
 
 ##invq data separately:
