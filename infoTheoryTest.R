@@ -78,3 +78,93 @@ invq.data <- droplevels(invq.data)
 
 p <- ggplot(invq.data, aes(Year, OV, color=SbjType)) + labs(y = "Proportion of OV", x = "\nYear") + stat_sum(aes(size=..n.., alpha=.5)) + scale_size_area(max_size=12) + stat_smooth() + scale_alpha_continuous(guide="none", limits = c(0,.7)) + scale_color_brewer(palette = "Set1") + ylim(0,1)
 
+
+
+####Icelandic
+
+
+####Read the file of CorpusSearch codes into an R data frame.
+
+foo <- read.delim("outputs/infoTheoryTest.ice.cod.ooo",header=F,sep=":")
+
+
+####Give appropriate column names to the columns
+
+colnames(foo) <- c("OV","Clause","ObjType","SbjType","Year","Genre","ID")
+
+
+####Throw out all the codes that refer to tokens that are irrelevant for the study.
+
+"Got up to subsetting"
+
+objsbjice.data <- subset(foo, OV != "z" & Clause != "z" & Year != "0" & Year != "" & Year != "na" & SbjType != "z" & SbjType != "" & ObjType != "z" & ObjType != "" & ID != "" & Genre != "")
+
+
+####Make sure R factor groups don't include factors for the irrelevant codes.
+
+objsbjice.data <- droplevels(objsbjice.data)
+
+"finished droplevels"
+
+####Make sure dates abd 0/1 codes are stored as numbers, and weights
+
+objsbjice.data$Year <- as.numeric(as.character(objsbjice.data$Year))
+objsbjice.data$OV <- as.numeric(as.character(objsbjice.data$OV))
+
+"finished converting to numeric"
+
+
+##Gotta do invq separately, without having a third variable, because there isn't enough data
+
+objsbjNOinvqIce.data <- subset(objsbjice.data, Clause != "invq")
+
+objsbjNOinvqIce.data <- droplevels(objsbjNOinvqIce.data)
+
+p <- ggplot(objsbjNOinvqIce.data, aes(Year, OV, color=SbjType)) + 
+  labs(y = "Proportion of OV", x = "\nYear") + 
+  stat_sum(aes(size=..n.., alpha=.1)) + 
+  scale_size_area(max_size=12) + 
+  stat_smooth() + 
+  scale_alpha_continuous(guide="none", limits = c(0,.7)) + 
+  scale_color_brewer(palette = "Set1") + 
+  ylim(0,1) + 
+  facet_grid(ObjType~Clause)
+
+ggsave(p, file = "infoTheory.objsbjmatsub.Ice.pdf", width = 8, height = 5)
+
+###same for narrative texts only
+
+objsbjNOinvqIceNar.data <- subset(objsbjNOinvqIce.data, Genre == "nar")
+
+objsbjNOinvqIceNar.data <- droplevels(objsbjNOinvqIceNar.data)
+
+p <- ggplot(objsbjNOinvqIceNar.data, aes(Year, OV, color=SbjType)) + 
+  labs(y = "Proportion of OV", x = "\nYear") + 
+  stat_sum(aes(size=..n.., alpha=.1)) + 
+  scale_size_area(max_size=12) + 
+  stat_smooth() + 
+  scale_alpha_continuous(guide="none", limits = c(0,.7)) + 
+  scale_color_brewer(palette = "Set1") + 
+  ylim(0,1) + 
+  facet_grid(ObjType~Clause)
+
+ggsave(p, file = "infoTheory.objsbjmatsubNar.Ice.pdf", width = 8, height = 5)
+
+
+###same for religious texts only
+
+objsbjNOinvqIceRel.data <- subset(objsbjNOinvqIce.data, Genre == "rel")
+
+objsbjNOinvqIceRel.data <- droplevels(objsbjNOinvqIceRel.data)
+
+p <- ggplot(objsbjNOinvqIceRel.data, aes(Year, OV, color=SbjType)) + 
+  labs(y = "Proportion of OV", x = "\nYear") + 
+  stat_sum(aes(size=..n.., alpha=.1)) + 
+  scale_size_area(max_size=12) + 
+  stat_smooth() + 
+  scale_alpha_continuous(guide="none", limits = c(0,.7)) + 
+  scale_color_brewer(palette = "Set1") + 
+  ylim(0,1) + 
+  facet_grid(ObjType~Clause)
+
+ggsave(p, file = "infoTheory.objsbjmatsubRel.Ice.pdf", width = 8, height = 5)
