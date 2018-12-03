@@ -1,0 +1,187 @@
+\documentclass[11pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{graphicx}
+\usepackage{geometry} % see geometry.pdf on how to lay out the page. There's lots.
+\usepackage{qtree}
+\usepackage{gb4e}
+\usepackage{amssymb}
+\usepackage{epstopdf}
+\usepackage{qtree}
+\usepackage{tree-dvips}
+\usepackage{natbib}
+\usepackage{tipa}
+\geometry{letterpaper} % or letter or a5paper or ... etc
+\pagestyle{headings}
+\bibpunct{(}{)}{;}{a}{}{,}
+% \geometry{landscape} % rotated page geometry
+
+% See the ``Article customise'' template for come common customisations
+
+
+\date{} % delete this line to display the current date
+
+%%% BEGIN DOCUMENT
+\begin{document}
+
+%\maketitle
+
+\begin{center}
+\large{Outline, ESRC Secondary Data Analysis Initiative bid:\\ \textsl{Noise Resistance and Audience Design (NoRAD)}}
+\end{center}
+\vspace{5mm}
+
+\section{Aim and Objectives}
+
+\section{Research Questions}
+
+What evidence is there that humans optimize the uniformity of information content (entropy; \citealt{shannon1948}) in their language use, and why?
+\begin{enumerate}
+	\item \label{aud} Does this strategy plausibly serve an ``audience design'' function (cf. \citealt{levyjaeger2007})?
+	\item \label{change} Do the linguistic variants favoured during language changes show a particular signature in their information distributions, one that is optimized for audience design?
+	\item \label{evo} Is information density smoothing part of the human faculty for social cognition? (Or is it even more basic, a feature of general cognition? cf. \citealt{shillcocketal2018})
+\end{enumerate}
+
+%point 3 "good framework for reanalysing existing datasets
+
+\section{Project Management}
+
+\noindent\textbf{Principle Investigator:} Christine Cuskley (SELLL and Centre for Behaviour and Evolution)\\
+\noindent\textbf{Co-Investigator:} Joel C. Wallenberg (SELLL and Centre for Behaviour and Evolution)\\
+
+
+(Move some stuff from the sections below)
+
+\section{Research Context}
+\begin{itemize}
+	\item \citet{aylettturk2004}: Smooth Signal Redundancy Hypothesis: acoustic corpus study based on map task corpus; first demonstration that information is distributed as evenly as possible across utterances. In this case, syllable duration is longer for less probable words, less predictable syllable trigrams, and words not previously mentioned in the discourse.
+	\begin{itemize}
+		\item Useful to us for general context
+	\end{itemize}
+	\item \citet{levyjaeger2007}: states the SSRH as ``Uniform Information Density''; show that the choice of syntactic variant in corpus and experiments depends on the resulting information density of the utterance, specifically based on ``surprisal'', which is *left-to-right* contextual probability.
+	\begin{itemize}
+		\item Useful to us for general context
+		\item \textbf{Gap in research:} they assume left-to-right is the most important, but do not investigate optimizing UID across whole utterances.
+		\item \textbf{Gap in research}: they pose the question as to whether this is for ease of processing for speaker, or for hearer (audience design), or for resistance to noise for hearer (audience design)
+	\end{itemize}
+	\item \citet{levy2008a}: specifically identifies resistance to noise as the reason for smoothing info content, but I need to finish reading it.
+	\item \citet{levy2005, levy2008}, \citet{smithlevy2013}: generally show that left-to-right surprisal predicts rate in reading tasks and other measures of comprehension. Also, the dissertation contains a proof that surprisal is equivalent to the ``resource-allocation theory of processing difficulty''
+	\begin{itemize}
+		\item Useful to us for general context
+		\item \textbf{Gap in research}: as above, assumes left-to-right is the most important, but do not investigate optimizing UID across whole utterances. Also, focused on processing difficulty, not noise resistance.
+	\end{itemize}
+	\item \citet{plotkinnowak2000}: propose that language codes evolved to be resistant to noise, as per \citet{shannon1948}'s ``THEOREM FOR A DISCRETE CHANNEL WITH NOISE''. They make the classic mistake of discussing language evolution as the evolution of linguistic codes, not as the evolution of the human ability to learn and produce such codes.
+	\begin{itemize}
+		\item Useful to us for general context, and as a starting critique for pitching our much more coherent evolutionary story.
+		\item \textbf{Gap in research}: they really know nothing about language, or the evolution of social cognition, or the evolution of vocal learning. So we improve on their theory.
+	\end{itemize}
+	\item \citet{mauritsetal2010}: try to show that language typology in ``S,V,O'' terms reflects codes optimizing UID. They can't, but it's useful for us...
+	\begin{itemize}
+		\item For question \ref{change}, they usefully show for their toy grammar that Os are more info content than Ss, which are more than Vs, and that people respond to these as one might expect. We use these assumptions in estimating the info density distributions of language changes.
+		\item \textbf{Gap in research}: they make the mistake of expecting typology to reflect UID, rather than susceptibility of a system to invasion by a syntactic variant that better optimizes UID, i.e. trajectories of change, not typology. We will fix that.
+	\end{itemize}
+	\item \citet{genzelcharniak2002}: show in corpus studies that entropy for individual words (i.e. info content based on general word frequency) is constant over a discourse, controlling for position of an utterance in a discourse. (Entropy steadily increases not controlling for context.) 
+	\begin{itemize}
+		\item Useful to us for general context
+		\item and because we may be able to apply their methods to assess information content distributions for utterances in unannotated text (and develop our diagnostic tools for such text).
+	\end{itemize}
+	\item ``clear speech'' phenomenon (get refs from Sophie Meekings): one aspect of speech directed at hearers with a receptive impairment (e.g. hearing loss) is to slow speech rate. This matches \citet{aylettturk2004}'s SSRH, but differently, it *must* be audience design: the speech is slowed to smooth redundancy to resist noise, but the noise is only what the speaker *imagines* that the hearer will experience.
+	\item Note: we can use Joel's simulation to illustrate the resistance to noise, and show we've done something already. 
+	\begin{itemize}
+		\item \textbf{Gap in research:} connecting the observed effects to information theory.
+	\end{itemize}
+	\item Note: we can use Joel's preliminary OV/VO results for historical English and Icelandic to illustrate directions for question \ref{change}, and show we've done something already.
+\end{itemize}
+
+
+\section{Research Methodology}
+\subsection{Existing Datasets to be Analysed}
+\begin{itemize}
+	\item[] \textbf{Developmental:}
+	\item CHILDES database \citep{macwhinney1996,macwhinney2014}; funded by US National Institute of Health
+	\item Some ASD speech corpus (the Italian one? some well-defined set of blogs?)
+	\item[] \textbf{Diachronic:}
+	\item York Corpus of Old English Prose \citep{ycoe}; funded by AHRC
+	\item Penn Parsed Corpora of Historical English \citep{ppcme24, ppceme, ppcmbe2}; funded by US National Science Foundation
+	\item Icelandic Parsed Historical Corpus \citep{icepahc09}; funded by RANNIS (National Research Fund of Iceland) and US National Science Foundation
+	\item The Diachronic Electronic Corpus Tyneside English (DECTE) \cite{decte}; funded by AHRC
+	\item[] \textbf{Interactional:}
+	\item Hansard Corpus; funded by AHRC
+	\item Advertising corpus?
+	\item Switchboard?
+	\item[] \textbf{Experimental:}
+	\item HMRC Maptask Corpus?
+	\item Possibly some datasets from the literature on using word-retrieval memory tasks to generate Receiver Operating Characteristic curves
+\end{itemize}
+%Confirm access to these datasets
+%Note: use Hansard coprus which is AHRC -- debate vs speech -- and impact direction for misinformation campaigns - cambridge analytica, William Hamilton on negative language bias and surprisal
+
+\subsection{Timelines}
+
+\subsection{Risks}
+
+\section{Outputs and Dissemination}
+
+\section{Costs}
+
+\subsection{Directly Allocated}
+
+\begin{itemize}
+	\item PI's salary, 2 years, at 0.4\\
+	Responsible for project management, sub-questions \ref{aud} and \ref{evo}, a role in writing up results, general conceptual development, and supervising the first RA below.
+	\item Co-I's salary, 2 years, 0.4\\
+	Responsible for sub-question \ref{change}, a significant role in writing up results, general conceptual development, and supervising the second RA below.
+\end{itemize}
+
+
+\subsection{Directly Incurred}
+
+\subsubsection{Staff}
+
+\begin{itemize}
+	\item Research Assistant (ECR): Rachael Bailes (SELLL and Centre for Behaviour and Evolution) full-time, 2 years\\
+	For designing studies and taking a lead role in writing up results, particularly on questions \ref{aud} and \ref{evo}. 
+	\item Research Assistant (ECR), full-time, 2 years\\Primarily to help with computational aspects of the project, especially for question \ref{change} and in designing a front-end for a diagnostic tool relating to the project's impact.
+\end{itemize}
+
+%Smaller sub-part of a larger resaerch programme that would feed into Rachael's career trajectory 
+
+\subsubsection{Travel and Subsistence}
+
+\begin{itemize}
+	\item Travel and lodging at 1 conference abroad or 2 UK conferences for at least 2 team members per year: £1500.00 per year.
+\end{itemize}
+
+
+\subsubsection{Equipment}
+
+\begin{itemize}
+	\item Project computer 
+	\item External hard-drive for backup
+	\item Licenses for corpora
+	\item Heroku cloud hosting towards end of the project
+\end{itemize}
+
+\subsubsection{Other - Training}
+
+\begin{itemize}
+	\item £500.00 per year per TA for skills training and professional development: £1000.00 per year.
+\end{itemize}
+
+\section{Pathways to Impact}
+
+\begin{itemize}
+	\item If the corpus studies identify a particular signature in the information distributions of natural language utterances, this can be used as a baseline for effective human communication. Identifying such a signature will be testing whether variants that win out in language change situations show a particular kind of information density optimization. A baseline measure can be compared against clinical populations, to see if there is then a signature for information spread in sub-optimal human communication. 
+	\item clinicians: potential diagnostic tool for ASD and/or schizophrenia, and possible changes to behavioural therapies for these conditions
+\end{itemize}
+%use for an RA: develop a diagnostic tool front -end
+
+
+
+
+
+
+\bibliographystyle{linquiry2}
+\bibliography{joelrefs}
+
+\end{document}
