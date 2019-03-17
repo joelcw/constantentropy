@@ -32,7 +32,8 @@ joelopt <- function(loglist)
     jj = jj-2
   }  
     
-  #computes all pairwise means of adjacent numbers of the array. Then, get the sd of the means, which we want to minimize.
+  #computes all pairwise means of adjacent numbers of the array. Then, get the sd of the means, the DORM, which we want to minimize.
+  #TODO: make this a separate function so you can call in independently of joelopt, which you should rename uido.
   kk = 1
   pairmeanlist = array()
   #save all means of adjacent numbers into a list of means
@@ -41,9 +42,14 @@ joelopt <- function(loglist)
       pairmean = (newlist[kk]+newlist[kk+1])/2
       pairmeanlist[kk] <- pairmean
       kk = kk+1
-    }
+  }
+  
+  #All the following sd() calls create what we called in the grant "Deviations of Rolling Means (DORMs)".
+  
   prevsd <- sd(pairmeanlist)
   currentsd <- prevsd #initialize currentsd
+  print("orig dorm")
+  print(prevsd)
     
   #Now, see if swapping any pair of numbers gets us a lower sd for pairmeanlist. If any swap does, then do it, otherwise don't. Repeat till no swap helps.
   ll = 1
@@ -65,6 +71,7 @@ joelopt <- function(loglist)
       
       
       #computes all pairwise means of adjacent numbers of the array. Then, get the sd of the means, which we want to minimize.
+      #I now see that I could have used the function "rollmean" in package "zoo", but I'm glad I did it old school here anyway.
       kk = 1
       hyppairmeanlist = array()
       #save all means of adjacent numbers into a list of means
@@ -81,20 +88,33 @@ joelopt <- function(loglist)
       if (currentsd < prevsd)
       { 
         print(newlist) #debug
-        print(sort(loglist)) #debig
+        #print((prevsd-currentsd)) #debug
+        print(sort(loglist)) #debug
         newlist <- hyplist
         prevsd <- currentsd
         ll = 1
-        print("we improved")
+        print("we improved") #debug
       }
       else
       {ll = ll+1}
       
     }
     
+  print("and here is new dorm") #debug
+  print(prevsd)#debug
   
   return(newlist)
+  
 }
+
+#Caveat: the above is all fine for the sim, because all arrays are of the same length. However, for computing DORMs in the wild, we will need to account for different
+#lengths by penalizing shorter utterances, since it is more likely for shorter utterances that a speaker might have achieved UIDO by chance.
+#(Also, shorter utterances will be less resistant to noise anyway, as per Shannon's theorem and Plotkin and Nowak.) E.g., a one-word utterance will have perfect UIDO
+#by definition, because there's no alteernative order. So, the penalty needs to be applied for the prob of getting a perfect UIDO by chance, out of all the 
+#possible *unique* orderings of word probabilities. This will penalize not just one-word utterances, but also repetitions of a single word, as in ASD stereotyped language.
+#I would suggest calculating a probability of UIDO by chance, p, and then adding that to the DORM (where minimal DORM is closest to UIDO). p must be calculated based on
+#all possible *unique* permutations of the starting array of word probs. TODO: Here is a function for computing and adding a penalty:
+
 
 
 
@@ -210,18 +230,75 @@ library(ggplot2)
 propnoise.df$trials <- as.numeric(as.character(propnoise.df$trials))
 propnoise.df$noises <- as.numeric(as.character(propnoise.df$noises))
 
-#add a column into the dataframe recoding for losing more than 70% of the info
+#add a column into the dataframe recoding for losing more than 50% of the info
 
 propnoise.df$bigLoss <- ifelse(propnoise.df$noises >= 0.5, 1, 0)
 
 #plotting bigLoss as a binary variable along with other stuff; toggle geom_line() to see the extremes of each stringtype, toggle geom_point() to see all the data
 
-ggplot(propnoise.df, aes(trials, noises, color=stringtypes)) + 
-  labs(y = "Proportion of Info Lost", x = "\nTrial") + 
+p <- ggplot(propnoise.df, aes(trials, noises, color=stringtypes)) + 
+  labs(y = "Proportion of Sentences Where the Majority of Info is Lost", x = "\nTrial") + 
   #geom_line() +
   #geom_point() +
-  stat_smooth() +
+  #stat_smooth() +
   scale_color_brewer(palette = "Set1") + 
   ylim(0,1) +
 #  geom_jitter(aes(trials, bigLoss, color=stringtypes), height = 0.15, shape=4) +
-  stat_smooth(aes(trials, bigLoss, color=stringtypes), linetype="dotdash")
+  stat_smooth(aes(trials, bigLoss, color=stringtypes), linetype="dotdash") +
+  theme_bw() + theme(panel.border = element_blank())
+
+ggsave(p, file = "uid_sim.png", width = 8.09, height = 5)
+
+
+
+
+
+
+#using google ngrams to get some estimates for sample sentences; note: "submit(ted)" is actually the sum of submitted and submitting, and Rach(a)el includes both spelling variants
+
+sentence1 <- matrix(nc=2,nr=13,c("there","will","be","a","bid","submit(ted)","in","March","by","Christine","Joel","and","Rach(a)el",0.00177,0.00165,0.00464,0.01665,0.0000149,2.082e-05,0.0168,0.0000994,0.00426,0.00000519,0.00000552,0.0245,1.213828e-05))
+
+sentence1 <- data.frame(sentence1)
+
+colnames(sentence1) <- c("Word","Prob")
+
+#orders the levels of the Word factor so that they can be plotted in the right order, i.e. not alphabetical
+sentence1$Word <- ordered(sentence1$Word, levels = c("there","will","be","a","bid","submit(ted)","in","March","by","Rach(a)el", "Christine","and","Joel"))
+
+sentence1$Prob <- as.numeric(as.character(sentence1$Prob))
+sentence1$Info <- -log2(sentence1$Prob)
+
+sentence2 <-matrix(nc=2,nr=12,c("in","March","Christine","will","be","submit(ting)","a","bid","with","Joel","and","Rach(a)el",0.0168,0.0000994,0.00000519,0.00165,0.00464,2.082e-05,0.01665,0.0000149,0.00565,0.00000552,0.0245,1.213828e-05))
+
+sentence2 <- data.frame(sentence2)
+
+colnames(sentence2) <- c("Word","Prob")
+
+sentence2$Word <- ordered(sentence2$Word, levels = c("in","March","Christine","will","be","submit(ting)","a","bid","with","Joel","and","Rach(a)el"))
+
+sentence2$Prob <- as.numeric(as.character(sentence2$Prob))
+sentence2$Info <- -log2(sentence2$Prob)
+
+library(splines)
+library(MASS)
+p <- ggplot(sentence1, aes(Word, Info, group=1)) + 
+  labs(y = "Info Content in Bits", x = "\nWord") + 
+  #geom_line() +
+  geom_point() +
+  stat_smooth(se=F, method= "lm", formula = y ~ ns(x,df=3)) +
+  scale_color_brewer(palette = "Set1") + 
+  #ylim(0,1) +
+  theme_bw() + theme(panel.border = element_blank())
+
+ggsave(p, file = "sentence1_info.png", width = 8.09, height = 5)
+
+p <- ggplot(sentence2, aes(Word, Info, group=1)) + 
+  labs(y = "Info Content in Bits ", x = "\nWord") + 
+  #geom_line() +
+  geom_point() +
+  stat_smooth(se=F, method= "lm", formula = y ~ ns(x,df=3)) +
+  scale_color_brewer(palette = "Set1") + 
+  #ylim(0,1) +
+  theme_bw() + theme(panel.border = element_blank())
+
+ggsave(p, file = "sentence2_info.png", width = 8.09, height = 5)
