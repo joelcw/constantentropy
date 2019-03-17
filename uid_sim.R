@@ -48,8 +48,6 @@ joelopt <- function(loglist)
   
   prevsd <- sd(pairmeanlist)
   currentsd <- prevsd #initialize currentsd
-  print("orig dorm")
-  print(prevsd)
     
   #Now, see if swapping any pair of numbers gets us a lower sd for pairmeanlist. If any swap does, then do it, otherwise don't. Repeat till no swap helps.
   ll = 1
@@ -100,8 +98,8 @@ joelopt <- function(loglist)
       
     }
     
-  print("and here is new dorm") #debug
-  print(prevsd)#debug
+  #print("and here is new dorm") #debug
+  #print(prevsd)#debug
   
   return(newlist)
   
