@@ -33,7 +33,8 @@ joelopt <- function(loglist)
   }  
     
   #computes all pairwise means of adjacent numbers of the array. Then, get the sd of the means, the DORM, which we want to minimize.
-  #TODO: make this a separate function so you can call in independently of joelopt, which you should rename uido.
+  #TODO: make this a separate function so you can call in independently of joelopt, which you should rename DORM. And maybe use library(zoo) rollmean(), which i didn't know
+  #about when i wrote my own below
   kk = 1
   pairmeanlist = array()
   #save all means of adjacent numbers into a list of means
@@ -111,7 +112,7 @@ joelopt <- function(loglist)
 #by definition, because there's no alteernative order. So, the penalty needs to be applied for the prob of getting a perfect UIDO by chance, out of all the 
 #possible *unique* orderings of word probabilities. This will penalize not just one-word utterances, but also repetitions of a single word, as in ASD stereotyped language.
 #I would suggest calculating a probability of UIDO by chance, p, and then adding that to the DORM (where minimal DORM is closest to UIDO). p must be calculated based on
-#all possible *unique* permutations of the starting array of word probs. TODO: Here is a function for computing and adding a penalty:
+#all possible *unique* permutations of the starting array of word probs. TODO: Here is a function for computing and adding a penalty: library(combinat), permn(), unique()
 
 
 
