@@ -273,6 +273,9 @@ sentence2 <- data.frame(sentence2)
 
 colnames(sentence2) <- c("Word","Prob")
 
+#Note: to reorder data frame rows by some key column(s), use df[order(df$key1,df$key2,...)] . But to reorder by a specific vector, like a uido vector, use df[match(uido, df$Info),].
+#The below only imposes an ordering on factors:
+
 sentence2$Word <- ordered(sentence2$Word, levels = c("in","March","Christine","will","be","submit(ting)","a","bid","with","Joel","and","Rach(a)el"))
 
 sentence2$Prob <- as.numeric(as.character(sentence2$Prob))
