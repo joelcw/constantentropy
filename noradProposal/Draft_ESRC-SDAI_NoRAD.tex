@@ -1,4 +1,5 @@
 \documentclass[11pt]{article}
+\usepackage{xcolor}
 \usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
 \usepackage{graphicx}
@@ -104,12 +105,13 @@ What evidence is there that humans optimize the uniformity of information conten
 	\item CHILDES database \citep{macwhinney1996,macwhinney2014}; funded by US National Institute of Health
 	\item Nagles ASD corpus, longitudinal (on talkbank)
 	\item[] \textbf{Diachronic:}
-	\item York Corpus of Old English Prose \citep{ycoe}; funded by AHRC
+	\item York Corpus of Old English Prose \citep{ycoe}; funded by Arts and Humanities Research Board (B/RG/AN5907/APN9528)
 	\item Penn Parsed Corpora of Historical English \citep{ppcme24, ppceme, ppcmbe2}; funded by US National Science Foundation
 	\item Icelandic Parsed Historical Corpus \citep{icepahc09}; funded by RANNIS (National Research Fund of Iceland) and US National Science Foundation
-	\item The Diachronic Electronic Corpus Tyneside English (DECTE) \cite{decte}; funded by AHRC
+	\item The Parsed Corpus of Early English Correspondence \citep{pceec} \nocite{corpussearch}; funded by UK Arts and Humanities Research Board (B/RE/AN5907/APN15474)
+	\item The Diachronic Electronic Corpus Tyneside English (DECTE) \cite{decte}; funded by AHRC (AH/H037691/1)
 	\item[] \textbf{Interactional:}
-	\item Hansard Corpus; funded by AHRC
+	\item Hansard Corpus; funded by AHRC/ESRC-funded SAMUELS (Semantic Annotation and Markup for Enhancing Lexical Searches, 2014-15) project (AH/L010062/1)
 	\item Advertising corpus?
 	\item Switchboard?
 	\item[] \textbf{Experimental:}
@@ -135,6 +137,9 @@ Responsible for designing studies and taking a lead role in writing up results, 
 
 \subsection{Timelines}
 
+\noindent \textbf{Starting Date:} 27th January, 2020\\
+\noindent \textbf{End Date:} 27th January, 2022
+
 \subsection{Risks}
 
 \section{Outputs and Dissemination}
@@ -144,9 +149,9 @@ Responsible for designing studies and taking a lead role in writing up results, 
 \subsection{Directly Allocated}
 
 \begin{itemize}
-	\item PI's salary, 2 years, at 0.4\\
+	\item PI's salary, 2 years, at 0.4
 	
-	\item Co-I's salary, 2 years, 0.4\\
+	\item Co-I's salary, 2 years, at 0.4
 	
 \end{itemize}
 
@@ -158,7 +163,7 @@ Responsible for designing studies and taking a lead role in writing up results, 
 \begin{itemize}
 	\item Research Assistant (ECR): Rachael Bailes (SELLL and Centre for Behaviour and Evolution) full-time, 2 years
 	
-	\item Research Assistant (ECR), full-time, 2 years
+	\item Research Assistant (ECR with PhD in hand), full-time, 2 years
 \end{itemize}
 
 %Smaller sub-part of a larger resaerch programme that would feed into Rachael's career trajectory 
@@ -173,10 +178,10 @@ Responsible for designing studies and taking a lead role in writing up results, 
 \subsubsection{Equipment}
 
 \begin{itemize}
-	\item Project computer 
-	\item External hard-drive for backup
-	\item Licenses for corpora
-	\item Heroku cloud hosting towards end of the project
+	\item Project computer: £1000.00
+	\item External hard-drive for backup: £50.00
+	\item Licenses for corpora: £200.00
+	\item Heroku cloud hosting in last year of project: £25 per month for 12 months: £300.00
 \end{itemize}
 
 \subsubsection{Other - Training}
@@ -192,8 +197,53 @@ Responsible for designing studies and taking a lead role in writing up results, 
 	\item clinicians: potential diagnostic tool for ASD and/or schizophrenia, and possible changes to behavioural therapies for these conditions
 \end{itemize}
 %use for an RA: develop a diagnostic tool front -end
-
-
+\Tree [.{\textbf{Datasets for Analysis}} 
+{\textbf{Temporal}\vspace{1mm}\\
+	\textsl{York Corpus of Old English Prose}\\
+	\textcolor{red}{\citep{ycoe}}\\
+	\textcolor{red}{\textbf{Funder: AHRC}}\\
+	\textcolor{red}{(B/RG/AN5907/APN9528)}\vspace{2mm}\\
+	\textsl{Penn Parsed Corpora}\\
+	\textsl{of Historical English} \\
+	\textcolor{red}{\citep{ppcme24}}\\
+	\textcolor{red}{\citep{ppceme, ppcmbe2}}\\
+	\textcolor{red}{\textbf{Funder: National Science}}\\
+	\textcolor{red}{\textbf{Foundation (US)}}\vspace{2mm}\\
+	\textsl{Icelandic Parsed Historical Corpus}\\
+	\textcolor{red}{\citep{icepahc09}}\\
+	\textcolor{red}{\textbf{Funders: NSF (US),}}\\
+	\textcolor{red}{\textbf{National Research Fund}}\\
+	\textcolor{red}{\textbf{of Iceland}}\vspace{2mm}\\
+	\textsl{\node{p0}PCEEC}
+	} 
+	[.{\textbf{Contextual}} {\textbf{Interactional}\vspace{1mm}\\
+		\textsl{Hansard Corpus}\\
+		\textcolor{red}{(Alexander \& Anderson 2012)}\\
+		\textcolor{red}{\textbf{Funders: ESRC, AHRC}}\\
+		\textcolor{red}{(AH/L010062/1)}\vspace{2mm}\\
+		\textsl{Diachronic Electronic}\\ 
+		\textsl{Corpus of Tyneside English}\\
+		\textcolor{red}{\citep{decte}}\\
+		\textcolor{red}{\textbf{Funder: AHRC}}\\
+		\textcolor{red}{(AH/H037691/1)}\vspace{2mm}\\
+		\textsl{\node{p1}Parsed Corpus of }\\
+		\textsl{Early English Correspondence}\\
+		\textcolor{red}{\citep{pceec}}\\
+		\textcolor{red}{\textbf{Funder: AHRC}}\\
+		\textcolor{red}{(B/RE/AN5907/APN15474)}
+	} 
+	{\textbf{Developmental}\vspace{1mm}\\
+	%	\textsl{CHILDES Database}\\
+	%	\textcolor{red}{\citep{macwhinney2014}}\\
+	%	\textcolor{red}{\textbf{Funder: National Institute}}\\
+	%	\textcolor{red}{\textbf{of Health (US)}}\vspace{2mm}\\
+		\textsl{Nadig ASD Corpus}\\
+		\textcolor{red}{(Bani Hani et al 2013)}\\
+		\textcolor{red}{\textbf{Funder: Fonds de recherche}}\\
+		\textcolor{red}{\textbf{du Québec}}
+	} ] ]
+	{\makedash{1pt}\anodecurve[br]{p0}[tr]{p1}{.3in}}
+	{\makedash{1pt}\anodecurve[tr]{p1}[br]{p0}{.3in}}
 
 
 

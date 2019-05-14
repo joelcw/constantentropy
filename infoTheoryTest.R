@@ -65,9 +65,36 @@ p <- ggplot(objsbjNOinvq.data, aes(Year, OV, color=SbjType)) +
   scale_alpha_continuous(guide="none", limits = c(0,.7)) + 
   scale_color_brewer(palette = "Set1") + 
   ylim(0,1) + 
-  facet_grid(ObjType~Clause)
+  facet_grid(ObjType~Clause) +
+  theme_bw() + theme(panel.border = element_blank())
 
-ggsave(p, file = "infoTheory.objsbjmatsub.English.pdf", width = 8, height = 5)
+ggsave(p, file = "infoTheory-objsbjmatsub-English.pdf", width = 8, height = 5)
+
+##simpler plot with obj type restricted to nominal, and removing gap subjects, just for clarity of explication in a CBE talk
+
+objsbjNOinvq.data <- subset(objsbjNOinvq.data, ObjType == "posobj")
+
+objsbjNOinvq.data <- droplevels(objsbjNOinvq.data)
+
+objsbjNOinvq.data <- subset(objsbjNOinvq.data, SbjType != "gapsbj")
+
+objsbjNOinvq.data <- droplevels(objsbjNOinvq.data)
+
+p <- ggplot(objsbjNOinvq.data, aes(Year, OV, color=SbjType)) + 
+  labs(y = "Proportion of OV", x = "\nYear") + 
+  stat_sum(aes(size=..n.., alpha=.1)) + 
+  scale_size_area(max_size=12) + 
+  stat_smooth() + 
+  #aes(linetype=ObjType) +
+  #scale_linetype_manual(values=c("solid","dotted","dashed")) + 
+  scale_alpha_continuous(guide="none", limits = c(0,.7)) + 
+  scale_color_brewer(palette = "Set1") + 
+  ylim(0,1) + 
+  facet_grid(~Clause) +
+  theme_bw() + theme(panel.border = element_blank())
+
+ggsave(p, file = "infoTheory-posObjsbjmatsub-English.pdf", width = 8, height = 5)
+
 
 
 ##invq data separately:
@@ -128,9 +155,10 @@ p <- ggplot(objsbjNOinvqIce.data, aes(Year, OV, color=SbjType)) +
   scale_alpha_continuous(guide="none", limits = c(0,.7)) + 
   scale_color_brewer(palette = "Set1") + 
   ylim(0,1) + 
-  facet_grid(ObjType~Clause)
+  facet_grid(ObjType~Clause) +
+  theme_bw() + theme(panel.border = element_blank())
 
-ggsave(p, file = "infoTheory.objsbjmatsub.Ice.pdf", width = 8, height = 5)
+ggsave(p, file = "infoTheory-objsbjmatsub-Ice.pdf", width = 8, height = 5)
 
 ###same for narrative texts only
 
@@ -146,10 +174,36 @@ p <- ggplot(objsbjNOinvqIceNar.data, aes(Year, OV, color=SbjType)) +
   scale_alpha_continuous(guide="none", limits = c(0,.7)) + 
   scale_color_brewer(palette = "Set1") + 
   ylim(0,1) + 
-  facet_grid(ObjType~Clause)
+  facet_grid(ObjType~Clause) +
+  theme_bw() + theme(panel.border = element_blank())
 
-ggsave(p, file = "infoTheory.objsbjmatsubNar.Ice.pdf", width = 8, height = 5)
+ggsave(p, file = "infoTheory-objsbjmatsubNar-Ice.pdf", width = 8, height = 5)
 
+
+##simpler plot with obj type restricted to nominal, and removing gap subjects, just for clarity of explication in a CBE talk
+
+objsbjNOinvqIceNar.data <- subset(objsbjNOinvqIceNar.data, ObjType == "posobj")
+
+objsbjNOinvqIceNar.data <- droplevels(objsbjNOinvqIceNar.data)
+
+objsbjNOinvqIceNar.data <- subset(objsbjNOinvqIceNar.data, SbjType != "gapsbj")
+
+objsbjNOinvqIceNar.data <- droplevels(objsbjNOinvqIceNar.data)
+
+p <- ggplot(objsbjNOinvqIceNar.data, aes(Year, OV, color=SbjType)) + 
+  labs(y = "Proportion of OV", x = "\nYear") + 
+  stat_sum(aes(size=..n.., alpha=.1)) + 
+  scale_size_area(max_size=12) + 
+  stat_smooth() + 
+  #aes(linetype=ObjType) +
+  #scale_linetype_manual(values=c("solid","dotted","dashed")) + 
+  scale_alpha_continuous(guide="none", limits = c(0,.7)) + 
+  scale_color_brewer(palette = "Set1") + 
+  ylim(0,1) + 
+  facet_grid(~Clause) +
+  theme_bw() + theme(panel.border = element_blank())
+
+ggsave(p, file = "infoTheory-posObjsbjmatsub-Ice.pdf", width = 8, height = 5)
 
 ###same for religious texts only
 
@@ -165,6 +219,7 @@ p <- ggplot(objsbjNOinvqIceRel.data, aes(Year, OV, color=SbjType)) +
   scale_alpha_continuous(guide="none", limits = c(0,.7)) + 
   scale_color_brewer(palette = "Set1") + 
   ylim(0,1) + 
-  facet_grid(ObjType~Clause)
+  facet_grid(ObjType~Clause) +
+  theme_bw() + theme(panel.border = element_blank())
 
 ggsave(p, file = "infoTheory.objsbjmatsubRel.Ice.pdf", width = 8, height = 5)

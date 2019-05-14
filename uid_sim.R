@@ -18,7 +18,8 @@ joelopt <- function(loglist)
   #remember, lists in R perversely start at offset 1, not 0
   midpoint <- round((length(loglist))/2) #remember, lists in R perversely start at offset 1, not 0
   
-  newlist <- sort(loglist)
+  #I've modified this to do decreasing because it migth be better for head-initial langs
+  newlist <- sort(loglist,decreasing=F)
   mm = 1 #remember, lists in R perversely start at offset 1, not 0
   jj = length(newlist)
   
@@ -205,7 +206,7 @@ while (currenttrial <= niter)
   trials[ii+2] <- currenttrial
   
   noises[ii+3] <- noise4prop
-  stringtypes[ii+3] <- "joelopt"
+  stringtypes[ii+3] <- "optimised"
   trials[ii+3] <- currenttrial
   
   
@@ -233,20 +234,24 @@ propnoise.df$noises <- as.numeric(as.character(propnoise.df$noises))
 
 propnoise.df$bigLoss <- ifelse(propnoise.df$noises >= 0.5, 1, 0)
 
-#plotting bigLoss as a binary variable along with other stuff; toggle geom_line() to see the extremes of each stringtype, toggle geom_point() to see all the data
+#remove "symmetric", since that was an old optimization technique and isn't doing any work anymore.
+propnoise.df <- subset(propnoise.df, stringtypes != "symmetric")
+propnoise.df <- droplevels(propnoise.df)
+
+#plotting bigLoss as a binary variable along with other stuff; toggle geom_line() to see the extremes of each stringtype, toggle geom_point() to see all the data, and stat_smooth() to look at the proportion of bits lost
 
 p <- ggplot(propnoise.df, aes(trials, noises, color=stringtypes)) + 
-  labs(y = "Proportion of Sentences Where the Majority of Info is Lost", x = "\nTrial") + 
+  labs(y = "Proportion", x = "\nTrial") + #y = "Proportion of Sentences Where the Majority of Info is Lost" y = "Proportion of Bits Lost"
   #geom_line() +
   #geom_point() +
-  #stat_smooth() +
+  stat_smooth() +
   scale_color_brewer(palette = "Set1") + 
   ylim(0,1) +
 #  geom_jitter(aes(trials, bigLoss, color=stringtypes), height = 0.15, shape=4) +
   stat_smooth(aes(trials, bigLoss, color=stringtypes), linetype="dotdash") +
   theme_bw() + theme(panel.border = element_blank())
 
-ggsave(p, file = "uid_sim.png", width = 8.09, height = 5)
+ggsave(p, file = "uid-sim-both.png", width = 8.09, height = 5)
 
 
 
@@ -280,6 +285,16 @@ sentence2$Word <- ordered(sentence2$Word, levels = c("in","March","Christine","w
 
 sentence2$Prob <- as.numeric(as.character(sentence2$Prob))
 sentence2$Info <- -log2(sentence2$Prob)
+
+#Seeing what order the uido for this wikipedia sentence is like:
+sentenceWiki <- matrix(nc=2,nr=9,c("The", "central", "limit", "theorem", "has", "a", "number", "of", "variants",0.0529,0.000113,0.00004,0.0000074,0.001577,0.0167,0.000367,0.02935,0.00000472))
+sentenceWiki <- data.frame(sentenceWiki)
+colnames(sentenceWiki) <- c("Word","Prob")
+sentenceWiki$Prob <- as.numeric(as.character(sentenceWiki$Prob))
+sentenceWiki$Info <- -log2(sentenceWiki$Prob)
+sentenceWiki.uido <- joelopt(sentenceWiki$Info)
+sentenceWiki[match(sentenceWiki.uido, sentenceWiki$Info),]
+
 
 library(splines)
 library(MASS)
