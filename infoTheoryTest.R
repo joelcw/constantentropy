@@ -96,6 +96,33 @@ p <- ggplot(objsbjNOinvq.data, aes(Year, OV, color=SbjType)) +
 ggsave(p, file = "infoTheory-posObjsbjmatsub-English.pdf", width = 8, height = 5)
 
 
+####little tests
+library(lme4)
+#Zing the year around the mean year
+objsbjNOinvq.data$zYear <- scale(objsbjNOinvq.data$Year, center=TRUE, scale=TRUE)
+sbj.fit <- glmer(OV~(1|ID)+Clause+zYear+SbjType+Clause*SbjType, family = binomial, data=objsbjNOinvq.data)
+summary(sbj.fit)
+sbjNoInteract.fit <- glmer(OV~(1|ID)+zYear+SbjType+Clause, family = binomial, data=objsbjNOinvq.data)
+summary(sbjNoInteract.fit)
+anova(sbj.fit,sbjNoInteract.fit)
+
+#trying poisson regression
+#convert to count data by unique values of the column variables,using plyr count
+sbj.count.data <- count(objsbjNOinvq.data, c("OV","Clause","SbjType","zYear","ID"))
+sbj.count.data.fit1 <- glm(formula = freq ~ OV + Clause + SbjType + zYear + Clause*SbjType + OV*SbjType + zYear*Clause + zYear*SbjType + zYear*OV + zYear*SbjType*Clause, family = "poisson", data = sbj.count.data)
+sbj.count.data.ClauseOV <- glm(formula = freq ~ OV + Clause + SbjType + zYear + Clause*OV + Clause*SbjType + OV*SbjType + zYear*Clause + zYear*SbjType + zYear*OV + zYear*SbjType*Clause, family = "poisson", data = sbj.count.data)
+sbj.count.data.ClauseOVSbj <- glm(formula = freq ~ OV + Clause + SbjType + zYear + Clause*OV + Clause*SbjType + OV*SbjType + zYear*Clause + zYear*SbjType + zYear*OV + Clause*OV*SbjType + zYear*SbjType*Clause, family = "poisson", data = sbj.count.data)
+
+anova(sbj.count.data.fit1,sbj.count.data.ClauseOV,test="Chisq")
+anova(sbj.count.data.ClauseOV,sbj.count.data.ClauseOVSbj,test="Chisq")
+summary(sbj.count.data.ClauseOVSbj)
+
+#same with mixed effects
+sbj.count.data.fit2 <- glmer(formula = freq ~ (1|ID) + OV + Clause + SbjType + zYear + Clause*SbjType + OV*SbjType  + zYear*OV, family = "poisson", data = sbj.count.data)
+sbj.count.data.fit3 <- glmer(formula = freq ~ (1|ID) + OV + Clause + SbjType + zYear + Clause*SbjType + OV*SbjType  + zYear*OV + OV*Clause, family = "poisson", data = sbj.count.data)
+anova(sbj.count.data.fit3,sbj.count.data.fit2)
+
+
 
 ##invq data separately:
 
