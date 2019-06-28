@@ -19,7 +19,7 @@ joelopt <- function(loglist)
   midpoint <- round((length(loglist))/2) #remember, lists in R perversely start at offset 1, not 0
   
   #I've modified this to do decreasing because it migth be better for head-initial langs
-  newlist <- sort(loglist,decreasing=F)
+  newlist <- sort(loglist,decreasing=T)
   mm = 1 #remember, lists in R perversely start at offset 1, not 0
   jj = length(newlist)
   
