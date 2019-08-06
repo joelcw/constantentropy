@@ -23,7 +23,6 @@ dorm <- function(logvec,correct=FALSE)
   {
     #takes rolling means for pairs of numbers, which we will use to compute the deviation of rolling means (dorm)
     means <- rollmean(logvec,2)
-    
     logvecdorm <- sd(means)
       
   }
