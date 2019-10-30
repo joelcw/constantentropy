@@ -23,19 +23,33 @@ dorm <- function(logvec,correct=FALSE)
   {
     #takes rolling means for pairs of numbers, which we will use to compute the deviation of rolling means (dorm)
     means <- rollmean(logvec,2)
-    logvecdorm <- sd(means)
+    logvecdorm <- sd(means) #use sqrt(mad())?
       
   }
   
   if (correct==TRUE)
     {
-    library(combinat)
+    #What follows is the olf brute-force way of doing this, which I've commented out and replaced with a simple formula for finding the number of unique permutations:
+    #library(combinat)
     
     #generates all possible permutations of logvec, then applies unique() which returns a list of only the unique ones (in case there are doubles)
-    uniquePerms <- unique(permn(logvec))
+    #uniquePerms <- unique(permn(logvec))
+    #numberUniquePerms <- length(uniquePerms)
     
-    #Takes the number of unique permutations, and calculates the probability of arriving at a specific one by chance, which then becomes the penalty we add to the dorm.
-    penalty <- 1/(length(uniquePerms))
+    #What follows is the formula for finding the number of unique perms, once you know how many repeats there are in the vector (what the next line does), and which items are repeating how many times
+    itemCount = as.data.frame(table(logvec))
+    
+    #extract from data frame how many repetitions the repeating items have, in a vector
+    reps <- itemCount[itemCount$Freq > 1,]$Freq
+    
+    denominator <- 1
+    
+    if (length(reps) != 0)
+    {denominator <- prod(factorial(reps))}
+    
+    numberUniquePerms = factorial(length(logvec))/denominator
+    
+    penalty=(1/numberUniquePerms)
     
     logvecdorm <- logvecdorm+penalty
     }
@@ -68,9 +82,9 @@ return(sd(pairmeanlist))
 
 #The input should be a vector of probabilities. It won't be normally dist, but the function converts it to info content, log2(1/p) , which
 #should make it normally dist enough to compute standard deviations as usual, especially after the rolling mean is taken (Central Limit Theorem).
-uido <- function(probvec)
+uido <- function(infovec)
 {
-  infovec <- log2(1/probvec)
+  #infovec <- log2(1/probvec)
   
   #remember, lists in R perversely start at offset 1, not 0
   midpoint <- round((length(infovec))/2) #remember, lists in R perversely start at offset 1, not 0

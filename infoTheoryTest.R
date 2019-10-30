@@ -65,7 +65,7 @@ p <- ggplot(objsbjNOinvq.data, aes(Year, OV, color=SbjType)) +
   scale_alpha_continuous(guide="none", limits = c(0,.7)) + 
   scale_color_brewer(palette = "Set1") + 
   ylim(0,1) + 
-  facet_grid(ObjType~Clause) +
+  facet_grid(ObjType~Clause) + #facet_wrap(~ObjType) +
   theme_bw() + theme(panel.border = element_blank())
 
 ggsave(p, file = "infoTheory-objsbjmatsub-English.pdf", width = 8, height = 5)
@@ -79,6 +79,18 @@ objsbjNOinvq.data <- droplevels(objsbjNOinvq.data)
 objsbjNOinvq.data <- subset(objsbjNOinvq.data, SbjType != "gapsbj")
 
 objsbjNOinvq.data <- droplevels(objsbjNOinvq.data)
+
+##simpler plot with clause type restricted to sub, and no qobjs, just for clarity of explication in oxford thing
+
+objsbjNOinvq.data <- subset(objsbjNOinvq.data, Clause == "sub")
+
+objsbjNOinvq.data <- droplevels(objsbjNOinvq.data)
+
+objsbjNOinvq.data <- subset(objsbjNOinvq.data, ObjType != "qobj")
+
+objsbjNOinvq.data <- droplevels(objsbjNOinvq.data)
+
+
 
 p <- ggplot(objsbjNOinvq.data, aes(Year, OV, color=SbjType)) + 
   labs(y = "Proportion of OV", x = "\nYear") + 
@@ -201,7 +213,7 @@ p <- ggplot(objsbjNOinvqIceNar.data, aes(Year, OV, color=SbjType)) +
   scale_alpha_continuous(guide="none", limits = c(0,.7)) + 
   scale_color_brewer(palette = "Set1") + 
   ylim(0,1) + 
-  facet_grid(ObjType~Clause) +
+  facet_grid(ObjType~Clause) + # facet_wrap(~ObjType) +
   theme_bw() + theme(panel.border = element_blank())
 
 ggsave(p, file = "infoTheory-objsbjmatsubNar-Ice.pdf", width = 8, height = 5)
@@ -216,6 +228,18 @@ objsbjNOinvqIceNar.data <- droplevels(objsbjNOinvqIceNar.data)
 objsbjNOinvqIceNar.data <- subset(objsbjNOinvqIceNar.data, SbjType != "gapsbj")
 
 objsbjNOinvqIceNar.data <- droplevels(objsbjNOinvqIceNar.data)
+
+##simpler plot with clause type restricted to sub, and no qobjs, just for clarity of explication in oxford thing
+
+objsbjNOinvqIceNar.data <- subset(objsbjNOinvqIceNar.data, Clause == "sub")
+
+objsbjNOinvqIceNar.data <- droplevels(objsbjNOinvqIceNar.data)
+
+objsbjNOinvqIceNar.data <- subset(objsbjNOinvqIceNar.data, ObjType != "qobj")
+
+objsbjNOinvqIceNar.data <- droplevels(objsbjNOinvqIceNar.data)
+
+
 
 p <- ggplot(objsbjNOinvqIceNar.data, aes(Year, OV, color=SbjType)) + 
   labs(y = "Proportion of OV", x = "\nYear") + 
