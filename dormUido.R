@@ -87,14 +87,14 @@ uido <- function(infovec)
   #infovec <- log2(1/probvec)
   
   #remember, lists in R perversely start at offset 1, not 0
-  midpoint <- round((length(infovec))/2) #remember, lists in R perversely start at offset 1, not 0
+  #midpoint <- (length(infovec))/2 #remember, lists in R perversely start at offset 1, not 0
   
   #I've modified this to do decreasing because it migth be better for head-initial langs
   newlist <- sort(infovec,decreasing=T)
   mm = 1 #remember, lists in R perversely start at offset 1, not 0
   jj = length(newlist)
   
-  while (jj >= midpoint)
+  while (jj > mm) #jj has to stay greater than midpoint because otherwise there'll be an extra swap for even-numbered arrays
   {
     #starting from both ends of the array, swaps every other pair of numbers, which gets us very close to optimized
     cup <- newlist[mm]
@@ -108,6 +108,7 @@ uido <- function(infovec)
   
   prevsd <- dorm(newlist)
   currentsd <- prevsd #initialize currentsd
+  print(newlist)#debug
   
   #Now, see if swapping any pair of numbers gets us a lower sd for pairmeanlist. If any swap does, then do it, otherwise don't. Repeat till no swap helps.
   ll = 1
@@ -133,9 +134,9 @@ uido <- function(infovec)
     #if the swap helped, then save that version of the list, and start the process over again, starting the counter at 1 again
     if (currentsd < prevsd)
     { 
-      print(newlist) #debug
+      #print(newlist) #debug
       #print((prevsd-currentsd)) #debug
-      print(sort(infovec)) #debug
+      #print(sort(infovec)) #debug
       newlist <- hyplist
       prevsd <- currentsd
       ll = 1
