@@ -104,28 +104,32 @@ uido <- function(infovec)
     jj = jj-2
   }  
   
-  #Gets the sd of the rolling pairwise means, the DORM, which we want to minimize, using the dorm function.
+  #Check to make sure the dorm of the swapped list is actually lower than that of the original vector...if it isn't, start the process below with the original vector instead of newlist
+  if (dorm(infovec) < dorm(newlist))
+    {swaplist <- infovec}
+  else
+    {swaplist <- newlist}
   
-  prevsd <- dorm(newlist)
+  #Gets the sd of the rolling pairwise means, the DORM, which we want to minimize, using the dorm function.
+  prevsd <- dorm(swaplist)
   currentsd <- prevsd #initialize currentsd
-  print(newlist)#debug
   
   #Now, see if swapping any pair of numbers gets us a lower sd for pairmeanlist. If any swap does, then do it, otherwise don't. Repeat till no swap helps.
   ll = 1
-  while((ll+1) <= length(newlist))
+  while((ll+1) <= length(swaplist))
   {
     #do the swap
     if ((ll-1) == 0)
     {
-      hyplist <- array(c(newlist[ll+1], newlist[ll], newlist[(ll+2):length(newlist)]))
+      hyplist <- array(c(swaplist[ll+1], swaplist[ll], swaplist[(ll+2):length(swaplist)]))
     }
-    else if ((ll+1) == length(newlist))
+    else if ((ll+1) == length(swaplist))
     {
-      hyplist <- array(c(newlist[1:(ll-1)], newlist[ll+1], newlist[ll]))
+      hyplist <- array(c(swaplist[1:(ll-1)], swaplist[ll+1], swaplist[ll]))
     }
     else
     {
-      hyplist <- array(c(newlist[1:(ll-1)],newlist[ll+1],newlist[ll],newlist[(ll+2):length(newlist)]))
+      hyplist <- array(c(swaplist[1:(ll-1)],swaplist[ll+1],swaplist[ll],swaplist[(ll+2):length(swaplist)]))
     }
     
     currentsd <- dorm(hyplist)
@@ -134,10 +138,10 @@ uido <- function(infovec)
     #if the swap helped, then save that version of the list, and start the process over again, starting the counter at 1 again
     if (currentsd < prevsd)
     { 
-      #print(newlist) #debug
+      #print(swaplist) #debug
       #print((prevsd-currentsd)) #debug
       #print(sort(infovec)) #debug
-      newlist <- hyplist
+      swaplist <- hyplist
       prevsd <- currentsd
       ll = 1
       print("we improved") #debug
@@ -150,6 +154,6 @@ uido <- function(infovec)
   #print("and here is new dorm") #debug
   #print(prevsd)#debug
   
-  return(newlist)
+  return(swaplist)
   
 }
