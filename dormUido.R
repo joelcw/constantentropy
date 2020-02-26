@@ -104,7 +104,7 @@ uido <- function(infovec)
     jj = jj-2
   }  
   
-  #Check to make sure the dorm of the swapped list is actually lower than that of the original vector...if it isn't, start the process below with the original vector instead of newlist
+  #Check to make sure the dorm of the swapped list is actually lower than that of the original vector...if it isn't, start the process below with the original vector instead of newlist 
   if (dorm(infovec) < dorm(newlist))
     {swaplist <- infovec}
   else
