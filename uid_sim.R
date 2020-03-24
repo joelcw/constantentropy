@@ -7,9 +7,10 @@ currenttrial = 1 #initialize trial counter
 
 niter <- 10000 
 
-noises <- vector(length = niter)
+noises <- vector(length = niter) #proportion of total info in the sentence destroyed by noise
 stringtypes <- vector(length = niter)
 trials <- vector(length = niter)
+absNoise <- vector(length = niter) #absolute amount of info in the sentence destroyed by noise, in bits
 
 
 
@@ -50,14 +51,17 @@ while (currenttrial <= niter)
   
   #update vectors for each trial
   noises[ii] <- noiseprop
+  absNoise[ii] <- totalnoise
   stringtypes[ii] <- "random"
   trials[ii] <- currenttrial
   
   noises[ii+1] <- noise2prop
+  absNoise[ii+1] <- totalnoise2
   stringtypes[ii+1] <- "asymmetric"
   trials[ii+1] <- currenttrial
   
   noises[ii+2] <- noise4prop
+  absNoise[ii+2] <- totalnoise4
   stringtypes[ii+2] <- "uido-optimized"
   trials[ii+2] <- currenttrial
   
@@ -67,7 +71,7 @@ while (currenttrial <= niter)
 }
 
 #bind vectors into a data frame and add column names
-propnoise.df <- data.frame(trials,noises,stringtypes)
+propnoise.df <- data.frame(trials,noises,absNoise,stringtypes)
 #colnames(propnoise.df) <- c("Trial","NoiseProp","VecType")
 
 
@@ -85,14 +89,39 @@ propnoise.df$bigLoss <- ifelse(propnoise.df$noises >= 0.5, 1, 0)
 #plotting bigLoss as a binary variable along with other stuff; toggle geom_line() to see the extremes of each stringtype, toggle geom_point() to see all the data, and stat_smooth() to look at the proportion of bits lost
 
 p <- ggplot(propnoise.df, aes(trials, noises, color=stringtypes)) + 
-  labs(y = "Proportion", x = "\nTrial") + #y = "Proportion of Sentences Where the Majority of Info is Lost" y = "Proportion of Bits Lost"
+  labs(y = "Proportion of Total Bits Lost", x = "\nTrial") + #y = "Proportion of Sentences Where the Majority of Info is Lost" y = "Proportion of Bits Lost"
   #geom_line() +
-  #geom_point() +
-  stat_smooth() +
+  geom_point(alpha = 1/20) +
+  stat_smooth(size = 1.5) +
   scale_color_brewer(palette = "Set1") + 
   ylim(0,1) +
 #  geom_jitter(aes(trials, bigLoss, color=stringtypes), height = 0.15, shape=4) +
-  stat_smooth(aes(trials, bigLoss, color=stringtypes), linetype="dotdash") +
+  #stat_smooth(aes(trials, bigLoss, color=stringtypes), linetype="dotdash") +
   theme_bw() + theme(panel.border = element_blank())
 
-ggsave(p, file = "uid-sim-both.png", width = 8.09, height = 5)
+ggsave(p, file = "uid-sim-totalbits.png", width = 8.09, height = 5)
+
+
+#box plot
+
+p <- ggplot(propnoise.df, aes(stringtypes, noises, group=stringtypes)) + 
+  scale_y_continuous(name = "Proportion of Total Bits Lost For Each \"Sentence\"") + 
+  scale_x_discrete(name = "\nOrder") + 
+  geom_point(alpha = 1/25) + 
+  geom_boxplot(fill=c("purple","green","yellow")) +
+  #geom_jitter(width = 0.3) +
+  theme_bw() + 
+  theme(panel.border = element_blank())
+
+#plotting bigLoss in a bar chart
+
+q <- ggplot(propnoise.df[propnoise.df$bigLoss==1,], aes(stringtypes)) + 
+  scale_y_continuous(name = "Number of Sentences with > 50% Information Lost", limits = c(0,10000) ) + 
+  scale_x_discrete(name = "\nOrder") + 
+  #geom_point(alpha = 1/25) + 
+  geom_bar(fill=c("purple","green","yellow"), color="black") +
+  #geom_jitter(width = 0.3) +
+  theme_bw() + 
+  theme(panel.border = element_blank())
+
+ggsave(q, file = "uid-sim-totalbits.png", width = 8.09, height = 5)
