@@ -86,6 +86,8 @@ propnoise.df$noises <- as.numeric(as.character(propnoise.df$noises))
 
 propnoise.df$bigLoss <- ifelse(propnoise.df$noises >= 0.5, 1, 0)
 
+write.csv(propnoise.df,file = "uid_sim_run.csv", row.names = F, col.names = T)
+
 #plotting bigLoss as a binary variable along with other stuff; toggle geom_line() to see the extremes of each stringtype, toggle geom_point() to see all the data, and stat_smooth() to look at the proportion of bits lost
 
 p <- ggplot(propnoise.df, aes(trials, noises, color=stringtypes)) + 
@@ -124,4 +126,20 @@ q <- ggplot(propnoise.df[propnoise.df$bigLoss==1,], aes(stringtypes)) +
   theme_bw() + 
   theme(panel.border = element_blank())
 
-ggsave(q, file = "uid-sim-totalbits.png", width = 8.09, height = 5)
+ggsave(q, file = "uid-sim-majority.png", width = 8.09, height = 5)
+
+#modeling
+
+library(lme4)
+#simple linear
+totalbits.fit <- lm(absNoise~stringtypes, data=propnoise.df)
+summary(totalbits.fit)
+
+#linear with random effect of trial
+totalbits.randfit <- lmer(absNoise~stringtypes+(1|trials), data=propnoise.df)
+summary(totalbits.randfit)
+
+#logistic with random effect of trial
+failure.fit <- glmer(bigLoss~stringtypes+(1|trials), family=binomial, data=propnoise.df)
+summary(failure.fit)
+
