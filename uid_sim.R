@@ -143,3 +143,7 @@ summary(totalbits.randfit)
 failure.fit <- glmer(bigLoss~stringtypes+(1|trials), family=binomial, data=propnoise.df)
 summary(failure.fit)
 
+#change contrasts so we can compare uido to randomized
+propnoise.df$stringtypes <- relevel(propnoise.df$stringtypes, ref="random")
+failure.relevel.fit <- glmer(bigLoss~stringtypes+(1|trials), family=binomial, data=propnoise.df)
+summary(failure.relevel.fit)
