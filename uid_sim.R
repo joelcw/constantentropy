@@ -1,5 +1,8 @@
 #note that this script uses the uido and dorm functions from dormUido.R in the same directory
 
+library(zipfR)
+Brown.probs <- Brown.tfl$f/N(Brown.tfl) #vector of word probabilities derived from the word freqs of the Brown corpus
+
 ii = 1 #initialize counter
 currenttrial = 1 #initialize trial counter
 
@@ -16,7 +19,9 @@ absNoise <- vector(length = niter) #absolute amount of info in the sentence dest
 
 while (currenttrial <= niter)
 {
-  probvec <- runif(10,min=0,max=1)
+  #probvec <- runif(10,min=0,max=1) #Old way: probs from a uniform distribution
+  probvec <- sample(Brown.probs, 10, replace = T, prob = Brown.probs) #probabilities randomly sampled from the Brown corpus probs, choice waited by their actual probabilities
+  
   starting <- sample(1:(length(probvec)-2), size=1) #remember, lists in R perversely start at offset 1, not 0
   
   noise <- c(probvec[starting], probvec[starting+1], probvec[starting+2])
