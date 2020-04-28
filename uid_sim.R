@@ -8,7 +8,7 @@ currenttrial = 1 #initialize trial counter
 
 #initialize vectors for each component of each run of the loop
 
-niter <- 10000 
+niter <- 1000000 
 
 noises <- vector(length = niter) #proportion of total info in the sentence destroyed by noise
 stringtypes <- vector(length = niter)
@@ -91,7 +91,7 @@ propnoise.df$noises <- as.numeric(as.character(propnoise.df$noises))
 
 propnoise.df$bigLoss <- ifelse(propnoise.df$noises >= 0.5, 1, 0)
 
-write.csv(propnoise.df,file = "uid_sim_run.csv", row.names = F, col.names = T)
+write.csv(propnoise.df,file = "~/constantentropy/uid_sim_run1mil.csv", row.names = F, col.names = T)
 
 #plotting bigLoss as a binary variable along with other stuff; toggle geom_line() to see the extremes of each stringtype, toggle geom_point() to see all the data, and stat_smooth() to look at the proportion of bits lost
 
@@ -120,18 +120,34 @@ p <- ggplot(propnoise.df, aes(stringtypes, noises, group=stringtypes)) +
   theme_bw() + 
   theme(panel.border = element_blank())
 
+ggsave(p, file = "~/constantentropy/uid-sim-totalbits1mil.png", width = 8.09, height = 5)
+
+
 #plotting bigLoss in a bar chart
 
+####Old way:
 q <- ggplot(propnoise.df[propnoise.df$bigLoss==1,], aes(stringtypes)) + 
-  scale_y_continuous(name = "Number of Sentences with > 50% Information Lost", limits = c(0,10000) ) + 
+  scale_y_continuous(name = "Number of Sentences with > 50% Information Lost", limits = c(0,1000) ) + 
   scale_x_discrete(name = "\nOrder") + 
   #geom_point(alpha = 1/25) + 
-  geom_bar(fill=c("purple","green","yellow"), color="black") +
+  geom_bar(fill=c("purple","green"), color="black") +
   #geom_jitter(width = 0.3) +
   theme_bw() + 
   theme(panel.border = element_blank())
 
-ggsave(q, file = "uid-sim-majority.png", width = 8.09, height = 5)
+#####New way
+propnoise.bar.df <- data.frame(stringtypes=c("asymmetric","random","uido-optimized"),NoSentences=c(sum(propnoise.df[stringtypes=="asymmetric",]$bigLoss),sum(propnoise.df[stringtypes=="random",]$bigLoss),sum(propnoise.df[stringtypes=="uido-optimized",]$bigLoss)))
+
+q <- ggplot(propnoise.bar.df, aes(stringtypes,NoSentences)) + 
+  scale_y_continuous(name = "Number of Sentences with > 50% Information Lost", limits = c(0,10000) ) + 
+  scale_x_discrete(name = "\nOrder") + 
+  #geom_point(alpha = 1/25) + 
+  geom_bar(fill=c("purple","green","yellow"), color="black", stat="identity") +
+  #geom_jitter(width = 0.3) +
+  theme_bw() + 
+  theme(panel.border = element_blank())
+
+ggsave(q, file = "~/constantentropy/uid-sim-majority1mil.png", width = 8.09, height = 5)
 
 #modeling
 
