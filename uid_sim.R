@@ -160,11 +160,36 @@ summary(totalbits.fit)
 totalbits.randfit <- lmer(absNoise~stringtypes+(1|trials), data=propnoise.df)
 summary(totalbits.randfit)
 
+#rescaled for 1 million trials with zipfian, Zing the numeric predictors so the mixed effects model doesnt barf so much:
+
+propnoise.df$zAbsNoise <- scale(propnoise.df$absNoise, center=TRUE, scale=TRUE)
+
+#linear with random effect of trial, using Zed absNoise
+totalbits.randfit <- lmer(zAbsNoise~stringtypes+(1|trials), data=propnoise.df)
+summary(totalbits.randfit)
+
+
+#simple logistic
+failure.fit <- glm(bigLoss~stringtypes, family=binomial, data=propnoise.df)
+summary(failure.fit)
+
+
 #logistic with random effect of trial
 failure.fit <- glmer(bigLoss~stringtypes+(1|trials), family=binomial, data=propnoise.df)
 summary(failure.fit)
+
+
 
 #change contrasts so we can compare uido to randomized
 propnoise.df$stringtypes <- relevel(propnoise.df$stringtypes, ref="random")
 failure.relevel.fit <- glmer(bigLoss~stringtypes+(1|trials), family=binomial, data=propnoise.df)
 summary(failure.relevel.fit)
+
+failure.relevel.fit <- glm(bigLoss~stringtypes, family=binomial, data=propnoise.df)
+summary(failure.relevel.fit)
+
+
+#Estimate variances on the Zed values for info lost to noise for each string type:
+var(propnoise.df[propnoise.df$stringtypes == "uido-optimized",]$zAbsNoise)
+var(propnoise.df[propnoise.df$stringtypes == "random",]$zAbsNoise)
+var(propnoise.df[propnoise.df$stringtypes == "asymmetric",]$zAbsNoise)
