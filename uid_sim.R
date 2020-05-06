@@ -193,3 +193,84 @@ summary(failure.relevel.fit)
 var(propnoise.df[propnoise.df$stringtypes == "uido-optimized",]$zAbsNoise)
 var(propnoise.df[propnoise.df$stringtypes == "random",]$zAbsNoise)
 var(propnoise.df[propnoise.df$stringtypes == "asymmetric",]$zAbsNoise)
+
+
+#Test for Normality of small samples from Zipf distribution
+library(zoo)
+
+Brown.bits <- log2(1/Brown.probs)
+
+
+niter <- 1000 
+ii <- 1
+pvalue.raw <- vector(length = niter) #proportion of total info in the sentence destroyed by noise
+pvalue.rollmean <- vector(length = niter)
+
+
+while (ii <= niter)
+{
+
+  foo <- sample(Brown.bits, 10, replace = T, prob = Brown.probs)
+  rolling <- rollmean(foo,2)
+  
+  #shapiro-wilk test for normality
+  pvalue.raw[ii] <- shapiro.test(foo)$p.value
+  pvalue.rollmean[ii] <- shapiro.test(rolling)$p.value
+  
+  ii <- ii+1
+  
+}
+
+#bind vectors into a data frame and add column names
+tests.df <- data.frame(pvalue.raw,pvalue.rollmean)
+
+
+#Is p.value > various alphas for raw array and for its rolling mean with window 2
+
+tests.df$alpha5raw <- ifelse(tests.df$pvalue.raw >= 0.5, 1, 0)
+tests.df$alpha5rolling <- ifelse(tests.df$pvalue.rollmean >= 0.5, 1, 0)
+
+tests.df$alpha05raw <- ifelse(tests.df$pvalue.raw >= 0.05, 1, 0)
+tests.df$alpha05rolling <- ifelse(tests.df$pvalue.rollmean >= 0.05, 1, 0)
+
+tests.df$alpha2raw <- ifelse(tests.df$pvalue.raw >= 0.2, 1, 0)
+tests.df$alpha2rolling <- ifelse(tests.df$pvalue.rollmean >= 0.2, 1, 0)
+
+
+#Same thing, but for samples of 10 sequential words
+niter <- 1000 
+ii <- 1
+pvalue.raw <- vector(length = niter) #proportion of total info in the sentence destroyed by noise
+pvalue.rollmean <- vector(length = niter)
+
+
+while (ii <= niter)
+{
+  
+  starting <- sample(1:(length(Brown.bits)-9), size=1)
+  
+  foo <- Brown.bits[starting:(starting+9)]
+  rolling <- rollmean(foo,2)
+  
+  #shapiro-wilk test for normality
+  pvalue.raw[ii] <- shapiro.test(foo)$p.value
+  pvalue.rollmean[ii] <- shapiro.test(rolling)$p.value
+  
+  ii <- ii+1
+  
+}
+
+#bind vectors into a data frame and add column names
+testsSeq.df <- data.frame(pvalue.raw,pvalue.rollmean)
+
+
+#Is p.value > various alphas for raw array and for its rolling mean with window 2
+
+testsSeq.df$alpha5raw <- ifelse(testsSeq.df$pvalue.raw >= 0.5, 1, 0)
+testsSeq.df$alpha5rolling <- ifelse(testsSeq.df$pvalue.rollmean >= 0.5, 1, 0)
+
+testsSeq.df$alpha05raw <- ifelse(testsSeq.df$pvalue.raw >= 0.05, 1, 0)
+testsSeq.df$alpha05rolling <- ifelse(testsSeq.df$pvalue.rollmean >= 0.05, 1, 0)
+
+testsSeq.df$alpha2raw <- ifelse(testsSeq.df$pvalue.raw >= 0.2, 1, 0)
+testsSeq.df$alpha2rolling <- ifelse(testsSeq.df$pvalue.rollmean >= 0.2, 1, 0)
