@@ -149,6 +149,7 @@ propnoise.df <- data.frame(trials,noises,absNoise,stringtypes,dorms)
 
 propnoise.df$trials <- as.numeric(as.character(propnoise.df$trials))
 propnoise.df$noises <- as.numeric(as.character(propnoise.df$noises))
+propnoise.df$dorms <- as.numeric(as.character(propnoise.df$dorms))
 
 #add a column into the dataframe recoding for losing more than 50% of the info
 
@@ -211,45 +212,36 @@ k <- ggplot(propnoise.df, aes(stringtypes, dorms, group=stringtypes)) +
   theme_bw() + 
   theme(panel.border = element_blank())
 
-ggsave(p, file = "~/constantentropy/uid-sentSim-totalbits.png", width = 8.09, height = 5)
+ggsave(k, file = "~/constantentropy/uid-sentSim-dorms.png", width = 8.09, height = 5)
 
 
 
 #modeling
+#get rid of the ordering of the levels of stringtypes, as that was just for plotting purposes
+propnoise.df$stringtypes <- as.factor(propnoise.df$stringtypes)
 
 library(lme4)
 #simple linear
 totalbits.fit <- lm(absNoise~stringtypes, data=propnoise.df)
 summary(totalbits.fit)
 
-#linear with random effect of trial
-totalbits.randfit <- lmer(absNoise~stringtypes+(1|trials), data=propnoise.df)
-summary(totalbits.randfit)
-
-#rescaled for 1 million trials with zipfian, Zing the numeric predictors so the mixed effects model doesnt barf so much:
-
-propnoise.df$zAbsNoise <- scale(propnoise.df$absNoise, center=TRUE, scale=TRUE)
-
-#linear with random effect of trial, using Zed absNoise
-totalbits.randfit <- lmer(zAbsNoise~stringtypes+(1|trials), data=propnoise.df)
-summary(totalbits.randfit)
+#linear with DORM as predictor
+totalbits.fit2 <- lm(absNoise~dorms, data=propnoise.df)
+summary(totalbits.fit2)
 
 
 #simple logistic
 failure.fit <- glm(bigLoss~stringtypes, family=binomial, data=propnoise.df)
 summary(failure.fit)
 
-
-#logistic with random effect of trial
-failure.fit <- glmer(bigLoss~stringtypes+(1|trials), family=binomial, data=propnoise.df)
-summary(failure.fit)
+#logistic with DORM as predictor instead
+failure.fit2 <- glm(bigLoss~dorms, family=binomial, data=propnoise.df)
+summary(failure.fit2)
 
 
 
 #change contrasts so we can compare uido to randomized
-propnoise.df$stringtypes <- relevel(propnoise.df$stringtypes, ref="random")
-failure.relevel.fit <- glmer(bigLoss~stringtypes+(1|trials), family=binomial, data=propnoise.df)
-summary(failure.relevel.fit)
+propnoise.df$stringtypes <- relevel(propnoise.df$stringtypes, ref="original")
 
 failure.relevel.fit <- glm(bigLoss~stringtypes, family=binomial, data=propnoise.df)
 summary(failure.relevel.fit)
@@ -260,6 +252,3 @@ var(propnoise.df[propnoise.df$stringtypes == "uido-optimized",]$zAbsNoise)
 var(propnoise.df[propnoise.df$stringtypes == "random",]$zAbsNoise)
 var(propnoise.df[propnoise.df$stringtypes == "asymmetric",]$zAbsNoise)
 
-
-#Calculate DORM for each stringtype
-propnoise.df$dorm <- propnoise.df$
