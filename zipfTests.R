@@ -99,7 +99,8 @@ ggplot(data.frame("bits" = moby.bits)) + geom_density(aes(x=bits))
 
 jacket.probs <- 1/(2^jacket.bits)
 
-
+moby.bits <- c(moby.bits,jacket.bits)
+moby.probs <- c(moby.probs,jacket.probs)
 
 niter <- 1000 
 ii <- 1

@@ -229,6 +229,11 @@ summary(totalbits.fit)
 totalbits.fit2 <- lm(absNoise~dorms, data=propnoise.df)
 summary(totalbits.fit2)
 
+#linear for DORM by stringtypes
+totalbits.fit3 <- lm(dorms~stringtypes, data=propnoise.df)
+summary(totalbits.fit3)
+
+
 
 #simple logistic
 failure.fit <- glm(bigLoss~stringtypes, family=binomial, data=propnoise.df)
