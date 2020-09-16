@@ -157,3 +157,77 @@ uido <- function(infovec)
   return(swaplist)
   
 }
+
+uidoAutoCov <- function(infovec)
+{
+  newlist <- sort(infovec,decreasing=T)
+  mm = 1 #remember, lists in R perversely start at offset 1, not 0
+  jj = length(newlist)
+  
+  while (jj > mm) #jj has to stay greater than midpoint because otherwise there'll be an extra swap for even-numbered arrays
+  {
+    #starting from both ends of the array, swaps every other pair of numbers, which gets us very close to optimized
+    cup <- newlist[mm]
+    newlist[mm] <- newlist[jj]
+    newlist[jj] <- cup
+    mm = mm+2
+    jj = jj-2
+  }  
+  
+  #computes autocovariance array for the vector, and returns the absolute value of the last autocovariance value.
+  infovec_autoCov <- abs(acf(infovec, type = "covariance", plot = FALSE)[[1]][length(infovec)])
+  newlist_autoCov <- abs(acf(newlist, type = "covariance", plot = FALSE)[[1]][length(newlist)])
+  
+  #Check to make sure the autocov of the swapped list is actually lower than that of the original vector...if it isn't, start the process below with the original vector instead of newlist 
+  if (infovec_autoCov < newlist_autoCov)
+  {swaplist <- infovec}
+  else
+  {swaplist <- newlist}
+  
+  #Gets the sd of the rolling pairwise means, the DORM, which we want to minimize, using the dorm function.
+  prevsd <- abs(acf(swaplist, type = "covariance", plot = FALSE)[[1]][length(swaplist)])
+  currentsd <- prevsd #initialize currentsd
+  
+  #Now, see if swapping any pair of numbers gets us a lower sd for pairmeanlist. If any swap does, then do it, otherwise don't. Repeat till no swap helps.
+  ll = 1
+  while((ll+1) <= length(swaplist))
+  {
+    #do the swap
+    if ((ll-1) == 0)
+    {
+      hyplist <- array(c(swaplist[ll+1], swaplist[ll], swaplist[(ll+2):length(swaplist)]))
+    }
+    else if ((ll+1) == length(swaplist))
+    {
+      hyplist <- array(c(swaplist[1:(ll-1)], swaplist[ll+1], swaplist[ll]))
+    }
+    else
+    {
+      hyplist <- array(c(swaplist[1:(ll-1)],swaplist[ll+1],swaplist[ll],swaplist[(ll+2):length(swaplist)]))
+    }
+    
+    currentsd <- abs(acf(hyplist, type = "covariance", plot = FALSE)[[1]][length(hyplist)])
+    
+    
+    #if the swap helped, then save that version of the list, and start the process over again, starting the counter at 1 again
+    if (currentsd < prevsd)
+    { 
+      #print(swaplist) #debug
+      #print((prevsd-currentsd)) #debug
+      #print(sort(infovec)) #debug
+      swaplist <- hyplist
+      prevsd <- currentsd
+      ll = 1
+      print("we improved by autoCov") #debug
+    }
+    else
+    {ll = ll+1}
+    
+  }
+  
+  #print("and here is new dorm") #debug
+  #print(prevsd)#debug
+  
+  return(swaplist)
+  
+}
