@@ -38,6 +38,8 @@ highlowFull$Frequency <- as.factor(highlowFull$Frequency)
 
 write.csv(highlowFull, file="/Documents/highlowFull.csv", row.names = F)
 
+highlowFull <- read.csv(file="~/constantentropy/memory/highlowFull.csv", header=T)
+
 #box plots
 ggplot(highlowFull, aes(ClumpedOrEven, R, group=ClumpedOrEven)) + 
   scale_y_continuous(name = "R") + 
