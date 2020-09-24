@@ -1,13 +1,13 @@
 library(ggplot2)
 library(ggridges)
 
-salsa <- read.csv(file="~/Documents/salsaData.csv", header=T)
+salsa <- read.csv(file="~/constantentropy/memory/allWordsTogether.csv", header=T)
 
-partInfo <- data.frame(salsa$ParticipantIdentifier,salsa$Age,salsa$Gender,salsa$Low.Start.High.Start,salsa$Clump.Even,salsa$NativeSpeaker,salsa$EngAoA,salsa$Bilingual,salsa$WorkerType,salsa$TimeToCompletion)
+'partInfo <- data.frame(salsa$ParticipantIdentifier,salsa$Age,salsa$Gender,salsa$Low.Start.High.Start,salsa$Clump.Even,salsa$NativeSpeaker,salsa$EngAoA,salsa$Bilingual,salsa$WorkerType,salsa$TimeToCompletion)
 
 colnames(partInfo) <- c("Participant","Age","Sex","LowOrHighStart","ClumpedOrEven","NativeSpeaker","EngAoA","Bilingual","WorkerType","TimeToCompletion")
 
-highlowrun <- read.csv(file="~/Documents/allBrokenDownByFrequency.csv", header=T)
+highlowrun <- read.csv(file="~/constantentropy/memory/highlowFull.csv", header=T)
 
 highlowrun$File <- as.character(highlowrun$File)
 
@@ -36,7 +36,7 @@ highlowFull$Age <- as.numeric(as.character(highlowFull$Age))
 highlowFull$TimeToCompletion <- as.numeric(as.character(highlowFull$TimeToCompletion))
 highlowFull$Frequency <- as.factor(highlowFull$Frequency)
 
-write.csv(highlowFull, file="/Documents/highlowFull.csv", row.names = F)
+write.csv(highlowFull, file="/Documents/highlowFull.csv", row.names = F)'
 
 highlowFull <- read.csv(file="~/constantentropy/memory/highlowFull.csv", header=T)
 
@@ -162,6 +162,7 @@ AIC(highlowFull.dfit.Sex.Age.Start.Clump.Freq.FreqClump) - AIC(highlowFull.dfit.
 #same for AUROC
 highlowFull.auroc.Sex.Age.Start.Clump.Freq.FreqClump <- lmer(AUROC~(1|Participant)+Sex+Age+Bilingual+LowOrHighStart+ClumpedOrEven+Frequency+Frequency:ClumpedOrEven, data=highlowFull)
 highlowFull.auroc.Sex.Age.Start.Clump.Freq <- lmer(AUROC~(1|Participant)+Sex+Age+Bilingual+LowOrHighStart+ClumpedOrEven+Frequency, data=highlowFull)
-summary(highlowFull.auroc.Sex.Age.Start.Clump.Freq.FreqClump)
-anova(highlowFull.auroc.Sex.Age.Start.Clump.Freq.FreqClump,highlowFull.auroc.Sex.Age.Start.Clump.Freq, test="Chisq")
+highlowFull.auroc.Sex.Age.Start.Freq <- lmer(AUROC~(1|Participant)+Sex+Age+Bilingual+LowOrHighStart+Frequency, data=highlowFull)
+summary(highlowFull.auroc.Sex.Age.Start.Clump.Freq)
+anova(highlowFull.auroc.Sex.Age.Start.Clump.Freq,highlowFull.auroc.Sex.Age.Start.Freq, test="Chisq")
 AIC(highlowFull.auroc.Sex.Age.Start.Clump.Freq.FreqClump) - AIC(highlowFull.auroc.Sex.Age.Start.Clump.Freq)
