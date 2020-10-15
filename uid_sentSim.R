@@ -257,3 +257,122 @@ var(propnoise.df[propnoise.df$stringtypes == "uido-optimized",]$zAbsNoise)
 var(propnoise.df[propnoise.df$stringtypes == "random",]$zAbsNoise)
 var(propnoise.df[propnoise.df$stringtypes == "asymmetric",]$zAbsNoise)
 
+#######################
+####Random noise simulation; same as above, but the three noise events do not have to be sequential (though they may be)
+
+
+ii = 1 #initialize counter
+currenttrial = 1 #initialize trial counter
+
+#initialize vectors for each component of each run of the loop
+
+niter <- length(pyccle.vecs.list) 
+
+noises <- vector(length = niter) #proportion of total info in the sentence destroyed by noise
+stringtypes <- vector(length = niter)
+trials <- vector(length = niter)
+absNoise <- vector(length = niter) #absolute amount of info in the sentence destroyed by noise, in bits
+dorms <- vector(length = niter) #dorm for each array, using "dorm" function from dormUido.R
+
+
+
+
+while (currenttrial <= niter)
+{
+  
+  probvecinfo <- pyccle.vecs.list[[currenttrial]]
+  
+  probvec <- 1/(2^probvecinfo)
+  
+  #Now unlike the simulation above, this just selects three string positions from anywhere in the string, without replacement
+  noisePositions <- sample(1:length(probvec), size=3, replace=FALSE) #remember, lists in R perversely start at offset 1, not 0
+  
+  noise <- c(probvec[noisePositions[1]], probvec[noisePositions[2]], probvec[noisePositions[3]])
+  noiseinfo <- log2(1/noise)
+  probvecinfo <- log2(1/probvec)
+  totalnoise <- sum(noiseinfo)
+  totalprobvecinfo <- sum(probvecinfo)
+  noiseprop <- totalnoise/totalprobvecinfo
+  probvecDorm <- dorm(probvecinfo)
+  
+  
+  
+  #Doing the same thing, but now the noise will fall in the same position in a vector that is end-heavy for information, but contains the same total info
+  lopsided <- sort(probvec)
+  
+  #It is important that the starting point in the vector is the same for both cases, so that each comparison of noise is a true comparison
+  noise2 <- c(lopsided[noisePositions[1]], lopsided[noisePositions[2]], lopsided[noisePositions[3]])
+  noise2info <- log2(1/noise2)
+  lopsidedinfo <- log2(1/lopsided)
+  totalnoise2 <- sum(noise2info)
+  lopsidedDorm <- dorm(lopsidedinfo)
+  
+  #This next is really a sanity check: this vector contains the same probabilities as the last, so this should be equal to totalprobvecinfo
+  totallopsidedinfo <- sum(lopsidedinfo)
+  noise2prop <- totalnoise2/totallopsidedinfo
+  
+  
+  #doing the same thing, but for a vector optimized by the uido algorithm
+  uidoinfo <- uido(probvecinfo)
+  
+  totalnoise4 <- sum(c(uidoinfo[noisePositions[1]], uidoinfo[noisePositions[2]], uidoinfo[noisePositions[3]]))
+  totaluidoinfo <- sum(uidoinfo)
+  noise4prop <- totalnoise4/totaluidoinfo
+  uidoDorm <- dorm(uidoinfo)
+  
+  
+  #doing the same thing, but for a randomized vector
+  randominfo <- sample(probvecinfo)
+  
+  totalnoiseRand <- sum(c(randominfo[noisePositions[1]], randominfo[noisePositions[2]], randominfo[noisePositions[3]]))
+  totalrandominfo <- sum(randominfo)
+  noiseRandprop <- totalnoiseRand/totalrandominfo
+  randomDorm <- dorm(randominfo)
+  
+  
+  #update vectors for each trial
+  noises[ii] <- noiseprop
+  absNoise[ii] <- totalnoise
+  stringtypes[ii] <- "original"
+  trials[ii] <- currenttrial
+  dorms[ii] <- probvecDorm
+  
+  noises[ii+1] <- noise2prop
+  absNoise[ii+1] <- totalnoise2
+  stringtypes[ii+1] <- "asymmetric"
+  trials[ii+1] <- currenttrial
+  dorms[ii+1] <- lopsidedDorm
+  
+  noises[ii+2] <- noise4prop
+  absNoise[ii+2] <- totalnoise4
+  stringtypes[ii+2] <- "uido-optimized"
+  trials[ii+2] <- currenttrial
+  dorms[ii+2] <- uidoDorm
+  
+  noises[ii+3] <- noiseRandprop
+  absNoise[ii+3] <- totalnoiseRand
+  stringtypes[ii+3] <- "randomized"
+  trials[ii+3] <- currenttrial
+  dorms[ii+3] <- randomDorm
+  
+  ii <- ii+4
+  currenttrial <- currenttrial+1 
+}
+
+#bind vectors into a data frame and add column names
+propnoise.df <- data.frame(trials,noises,absNoise,stringtypes,dorms)
+#colnames(propnoise.df) <- c("Trial","NoiseProp","VecType")
+
+
+propnoise.df$trials <- as.numeric(as.character(propnoise.df$trials))
+propnoise.df$noises <- as.numeric(as.character(propnoise.df$noises))
+propnoise.df$dorms <- as.numeric(as.character(propnoise.df$dorms))
+
+#add a column into the dataframe recoding for losing more than 50% of the info
+
+propnoise.df$bigLoss <- ifelse(propnoise.df$noises >= 0.5, 1, 0)
+
+write.csv(propnoise.df,file = "~/constantentropy/uid_sentSimOneWordNoises.csv", row.names = F)
+propnoise.df <- read.csv(file = "~/constantentropy/uid_sentSimOneWordNoises.csv", header=T)
+
+propnoise.df$stringtypes <- ordered(propnoise.df$stringtypes, levels = c("asymmetric","randomized","original","uido-optimized"))
