@@ -2,6 +2,15 @@ library(ggplot2)
 library(ggridges)
 
 salsa <- read.csv(file="~/constantentropy/memory/allWordsTogether.csv", header=T)
+salsa <- subset(salsa, Age != "" && Age != "unknown")
+salsa <- subset(salsa, Clump.Even != "")
+salsa <- droplevels(salsa)
+
+salsa$Age <- as.numeric(as.character(salsa$Age))
+salsa$TimeToCompletion <- as.numeric(as.character(salsa$TimeToCompletion))
+salsa$R <- as.numeric(as.character(salsa$R))
+salsa$dprime <- as.numeric(as.character(salsa$dprime))
+salsa$AUROC <- as.numeric(as.character(salsa$AUROC))
 
 'partInfo <- data.frame(salsa$ParticipantIdentifier,salsa$Age,salsa$Gender,salsa$Low.Start.High.Start,salsa$Clump.Even,salsa$NativeSpeaker,salsa$EngAoA,salsa$Bilingual,salsa$WorkerType,salsa$TimeToCompletion)
 
@@ -21,7 +30,8 @@ highlowrun$Participant <- gsub(pattern,"\\1",highlowrun$File)
 #merge the participant info from salsa with the highlowrun data
 highlowFull <- merge(highlowrun, partInfo, by=c("Participant"))
 
-#salsa <- subset(salsa, Age != "" && Age != "unknown")
+salsa <- subset(salsa, Age != "" && Age != "unknown")
+
 #salsa <- subset(salsa, Clump.Even != "")
 #salsa <- droplevels(salsa)
 highlowFull <- subset(highlowFull, Age != "unknown")
@@ -40,9 +50,9 @@ write.csv(highlowFull, file="/Documents/highlowFull.csv", row.names = F)'
 
 highlowFull <- read.csv(file="~/constantentropy/memory/highlowFull.csv", header=T)
 
-#box plots
+####box plots
 ggplot(highlowFull, aes(ClumpedOrEven, R, group=ClumpedOrEven)) + 
-  scale_y_continuous(name = "R") + 
+  scale_y_continuous(name = "Recollection Parameter") + 
   scale_x_discrete(name = "\nExperimental Condition") + 
   geom_point(alpha = 1/25) + 
   geom_boxplot(fill=c("purple","green","purple","green")) +
@@ -52,7 +62,7 @@ ggplot(highlowFull, aes(ClumpedOrEven, R, group=ClumpedOrEven)) +
   theme(panel.border = element_blank())
 
 ggplot(highlowFull, aes(ClumpedOrEven, dprime, group=ClumpedOrEven)) + 
-  scale_y_continuous(name = "d\'") + 
+  scale_y_continuous(name = "Familiarity Parameter (d\')") + 
   scale_x_discrete(name = "\nExperimental Condition") + 
   geom_point(alpha = 1/25) + 
   geom_boxplot(fill=c("purple","green","purple","green")) +
@@ -62,7 +72,7 @@ ggplot(highlowFull, aes(ClumpedOrEven, dprime, group=ClumpedOrEven)) +
   theme(panel.border = element_blank())
 
 ggplot(highlowFull, aes(ClumpedOrEven, AUROC, group=ClumpedOrEven)) + 
-  scale_y_continuous(name = "d\'") + 
+  scale_y_continuous(name = "Overall Performance (AUROC)") + 
   scale_x_discrete(name = "\nExperimental Condition") + 
   geom_point(alpha = 1/25) + 
   geom_boxplot(fill=c("purple","green","purple","green")) +
@@ -72,6 +82,14 @@ ggplot(highlowFull, aes(ClumpedOrEven, AUROC, group=ClumpedOrEven)) +
   theme(panel.border = element_blank())
 
 
+ggplot(salsa, aes(Clump.Even, R, group=Clump.Even)) + 
+  scale_y_continuous(name = "R") + 
+  scale_x_discrete(name = "\nExperimental Condition") + 
+  geom_point(alpha = 1/25) + 
+  geom_boxplot(fill=c("purple","green")) +
+  #geom_jitter(width = 0.3) +
+  theme_bw() + 
+  theme(panel.border = element_blank())
 
 ggplot(salsa, aes(Clump.Even, TimeToCompletion, group=Clump.Even)) + 
   scale_y_continuous(name = "Time To Completion (mins)") + 
@@ -82,11 +100,14 @@ ggplot(salsa, aes(Clump.Even, TimeToCompletion, group=Clump.Even)) +
   theme_bw() + 
   theme(panel.border = element_blank())
 
-
-#ridge plots
-ggplot(salsa, aes(R, Clump.Even)) + 
-  labs(y = "Condition", x = "\nR") +
-  theme_bw() + theme(panel.border = element_blank())
+ggplot(salsa, aes(Clump.Even, TimeToCompletion, group=Clump.Even)) + 
+  scale_y_continuous(name = "Time To Completion (mins)") + 
+  scale_x_discrete(name = "\nExperimental Condition") + 
+  geom_point(alpha = 1/25) + 
+  geom_boxplot(fill=c("purple","green")) +
+  #geom_jitter(width = 0.3) +
+  theme_bw() + 
+  theme(panel.border = element_blank())
 
 
 
@@ -115,7 +136,14 @@ scale_color_brewer(palette = "Set1") +
   theme_bw() + theme(panel.border = element_blank())
 
 
+####ridge plots
+ggplot(salsa, aes(R, Clump.Even)) + 
+  labs(y = "Condition", x = "\nR") +
+  theme_bw() + theme(panel.border = element_blank())
 
+
+
+###model fitting
 salsa.Rfit.Gender.Age.Start.Clump.ClumpAge <- glm(R~Gender+Age+Bilingual+Low.Start.High.Start+Clump.Even+Clump.Even:Age, family = gaussian, data=salsa)
 
 salsa.dprimefit.Gender.Age.Start.Clump.ClumpAge <- glm(dprime~Gender+Age+Bilingual+Low.Start.High.Start+Clump.Even+Clump.Even:Age, family = gaussian, data=salsa)
@@ -124,12 +152,34 @@ salsa.timefit.Gender.Age.Start.Clump.ClumpAge <- glm(TimeToCompletion~Gender+Age
 
 
 salsa.Rfit.Gender.Age.Start.Clump <- glm(R~Gender+Age+Bilingual+Low.Start.High.Start+Clump.Even, family = gaussian, data=salsa)
+summary(salsa.Rfit.Gender.Age.Start.Clump)
 salsa.Rfit.Gender.Age.Start <- glm(R~Gender+Age+Bilingual+Low.Start.High.Start, family = gaussian, data=salsa)
 
 anova(salsa.Rfit.Gender.Age.Start.Clump.ClumpAge,salsa.Rfit.Gender.Age.Start.Clump, test="Chisq")
 anova(salsa.Rfit.Gender.Age.Start.Clump,salsa.Rfit.Gender.Age.Start, test="Chisq")
 AIC(salsa.Rfit.Gender.Age.Start)
+BIC(salsa.Rfit.Gender.Age.Start)
 AIC(salsa.Rfit.Gender.Age.Start.Clump)
+BIC(salsa.Rfit.Gender.Age.Start.Clump)
+
+salsa.auroc.Gender.Age.Start.Clump <- glm(AUROC~Gender+Age+Bilingual+Low.Start.High.Start+Clump.Even, family = gaussian, data=salsa)
+summary(salsa.auroc.Gender.Age.Start.Clump)
+salsa.auroc.Gender.Age.Start <- glm(AUROC~Gender+Age+Bilingual+Low.Start.High.Start, family = gaussian, data=salsa)
+anova(salsa.auroc.Gender.Age.Start.Clump,salsa.auroc.Gender.Age.Start, test="Chisq")
+AIC(salsa.auroc.Gender.Age.Start)
+BIC(salsa.auroc.Gender.Age.Start)
+AIC(salsa.auroc.Gender.Age.Start.Clump)
+BIC(salsa.auroc.Gender.Age.Start.Clump)
+
+salsa.dprime.Gender.Age.Start.Clump <- glm(dprime~Gender+Age+Bilingual+Low.Start.High.Start+Clump.Even, family = gaussian, data=salsa)
+summary(salsa.dprime.Gender.Age.Start.Clump)
+salsa.dprime.Gender.Age.Start <- glm(dprime~Gender+Age+Bilingual+Low.Start.High.Start, family = gaussian, data=salsa)
+anova(salsa.dprime.Gender.Age.Start.Clump,salsa.dprime.Gender.Age.Start, test="Chisq")
+AIC(salsa.dprime.Gender.Age.Start)
+BIC(salsa.dprime.Gender.Age.Start)
+AIC(salsa.dprime.Gender.Age.Start.Clump)
+BIC(salsa.dprime.Gender.Age.Start.Clump)
+
 
 salsa.timefit.Gender.Age.Start.Clump <- glm(TimeToCompletion~Gender+Age+Bilingual+Low.Start.High.Start+Clump.Even, family = gaussian, data=salsa)
 salsa.timefit.Gender.Age.Start <- glm(TimeToCompletion~Gender+Age+Bilingual+Low.Start.High.Start, family = gaussian, data=salsa)
@@ -137,6 +187,7 @@ salsa.timefit.Gender.Age.Start <- glm(TimeToCompletion~Gender+Age+Bilingual+Low.
 anova(salsa.timefit.Gender.Age.Start,salsa.timefit.Gender.Age.Start.Clump, test = "Chisq")
 AIC(salsa.timefit.Gender.Age.Start)
 AIC(salsa.timefit.Gender.Age.Start.Clump)
+
 
 ####Models for the high/low separated data
 library(lme4)
