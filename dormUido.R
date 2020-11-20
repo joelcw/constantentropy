@@ -12,8 +12,8 @@
 dorm <- function(logvec,correct=FALSE)
 {
   
-  #In the case of a single-item vector, there is no rolling mean with window 2, and no standard deviation of means, so we just set the dorm to 0 in that case.
-  if (length(logvec) == 1)
+  #In the case of a single-item vector or two item, there is no rolling mean with window 2, and no standard deviation of means, so we just set the dorm to 0 in that case.
+  if (length(logvec) <= 2)
   {
     logvecdorm = 0
   }
