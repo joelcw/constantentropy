@@ -12,8 +12,8 @@ library(zoo)
 dorm <- function(logvec,correct=FALSE)
 {
   
-  #In the case of a single-item vector, there is no rolling mean with window 2, and no standard deviation of means, so we just set the dorm to 0 in that case.
-  if (length(logvec) == 1)
+  #In the case of a single-item vector or a 2 item vector, there is no rolling mean with window 2, and no standard deviation of means, so we just set the dorm to 0 in that case.
+  if (length(logvec) <= 2)
   {
     logvecdorm = 0
   }
@@ -23,7 +23,7 @@ dorm <- function(logvec,correct=FALSE)
   {
     #takes rolling means for pairs of numbers, which we will use to compute the deviation of rolling means (dorm)
     means <- rollmean(logvec,2)
-    logvecdorm <- sd(means) #use sqrt(mad())?
+    logvecdorm <- var(means) #I have changed this to sample variance as per Ferrer i Cancho's advice, as this is an unbiased estimator; Old code: sd(means) #use sqrt(mad())?
       
   }
   
