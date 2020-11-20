@@ -7,13 +7,13 @@
 #by definition, because there's no alteernative order. It also penalizes repetitions of a single word, as in ASD stereotyped language.
 #Uses: library(combinat), permn(), unique()
 
-library(zoo)
+#library(zoo)
 
 dorm <- function(logvec,correct=FALSE)
 {
   
-  #In the case of a single-item vector or a 2 item vector, there is no rolling mean with window 2, and no standard deviation of means, so we just set the dorm to 0 in that case.
-  if (length(logvec) <= 2)
+  #In the case of a single-item vector, there is no rolling mean with window 2, and no standard deviation of means, so we just set the dorm to 0 in that case.
+  if (length(logvec) == 1)
   {
     logvecdorm = 0
   }
@@ -84,7 +84,12 @@ return(sd(pairmeanlist))
 #should make it normally dist enough to compute standard deviations as usual, especially after the rolling mean is taken (Central Limit Theorem).
 uido <- function(infovec)
 {
-  #infovec <- log2(1/probvec)
+  #if infovec is 1 or 2 items, there is no way to improve the dorm, so we skip that case
+  if (length(infovec) <= 2)
+  {
+    return(infovec)
+    break
+  }
   
   #remember, lists in R perversely start at offset 1, not 0
   #midpoint <- (length(infovec))/2 #remember, lists in R perversely start at offset 1, not 0
