@@ -166,6 +166,17 @@ propnoise.df$stringtypes <- ordered(propnoise.df$stringtypes, levels = c("asymme
 
 library(ggplot2)
 
+#dorm by proportion bits lost
+
+ggplot(propnoise.df, aes(dorms, noises, group=stringtypes)) + 
+  scale_y_continuous(name = "Proportion of Total Bits Lost For Each \"Sentence\"") + 
+  scale_x_discrete(name = "\nDorm") + 
+ # geom_point(alpha = 1/25) + 
+  geom_smooth() +
+  #geom_jitter(width = 0.3) +
+  theme_bw() + 
+  theme(panel.border = element_blank())
+
 #box plot
 
 p <- ggplot(propnoise.df, aes(stringtypes, noises, group=stringtypes)) + 

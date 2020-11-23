@@ -12,6 +12,8 @@ salsa$R <- as.numeric(as.character(salsa$R))
 salsa$dprime <- as.numeric(as.character(salsa$dprime))
 salsa$AUROC <- as.numeric(as.character(salsa$AUROC))
 
+salsa$Condition <- ifelse(salsa$Clump.Even == "Clump", "Clumped","Smooth")
+
 'partInfo <- data.frame(salsa$ParticipantIdentifier,salsa$Age,salsa$Gender,salsa$Low.Start.High.Start,salsa$Clump.Even,salsa$NativeSpeaker,salsa$EngAoA,salsa$Bilingual,salsa$WorkerType,salsa$TimeToCompletion)
 
 colnames(partInfo) <- c("Participant","Age","Sex","LowOrHighStart","ClumpedOrEven","NativeSpeaker","EngAoA","Bilingual","WorkerType","TimeToCompletion")
@@ -51,7 +53,7 @@ write.csv(highlowFull, file="/Documents/highlowFull.csv", row.names = F)'
 highlowFull <- read.csv(file="~/constantentropy/memory/highlowFull.csv", header=T)
 
 ####box plots
-ggplot(highlowFull, aes(ClumpedOrEven, R, group=ClumpedOrEven)) + 
+foo <- ggplot(highlowFull, aes(ClumpedOrEven, R, group=ClumpedOrEven)) + 
   scale_y_continuous(name = "Recollection Parameter") + 
   scale_x_discrete(name = "\nExperimental Condition") + 
   geom_point(alpha = 1/25) + 
@@ -61,7 +63,9 @@ ggplot(highlowFull, aes(ClumpedOrEven, R, group=ClumpedOrEven)) +
   theme_bw() + 
   theme(panel.border = element_blank())
 
-ggplot(highlowFull, aes(ClumpedOrEven, dprime, group=ClumpedOrEven)) + 
+ggsave(foo, file = "~/CurrentLx/newcastleModules/MRes/salsabila/recolHighLow.pdf", width = 8.09, height = 5)
+
+foo <- ggplot(highlowFull, aes(ClumpedOrEven, dprime, group=ClumpedOrEven)) + 
   scale_y_continuous(name = "Familiarity Parameter (d\')") + 
   scale_x_discrete(name = "\nExperimental Condition") + 
   geom_point(alpha = 1/25) + 
@@ -71,7 +75,10 @@ ggplot(highlowFull, aes(ClumpedOrEven, dprime, group=ClumpedOrEven)) +
   theme_bw() + 
   theme(panel.border = element_blank())
 
-ggplot(highlowFull, aes(ClumpedOrEven, AUROC, group=ClumpedOrEven)) + 
+ggsave(foo, file = "~/CurrentLx/newcastleModules/MRes/salsabila/dprimeHighLow.pdf", width = 8.09, height = 5)
+
+
+foo <- ggplot(highlowFull, aes(ClumpedOrEven, AUROC, group=ClumpedOrEven)) + 
   scale_y_continuous(name = "Overall Performance (AUROC)") + 
   scale_x_discrete(name = "\nExperimental Condition") + 
   geom_point(alpha = 1/25) + 
@@ -81,15 +88,41 @@ ggplot(highlowFull, aes(ClumpedOrEven, AUROC, group=ClumpedOrEven)) +
   theme_bw() + 
   theme(panel.border = element_blank())
 
+ggsave(foo, file = "~/CurrentLx/newcastleModules/MRes/salsabila/aurocHighLow.pdf", width = 8.09, height = 5)
 
-ggplot(salsa, aes(Clump.Even, R, group=Clump.Even)) + 
-  scale_y_continuous(name = "R") + 
+
+foo <- ggplot(salsa, aes(Condition, R, group=Condition)) + 
+  scale_y_continuous(name = "Recollection Parameter") + 
   scale_x_discrete(name = "\nExperimental Condition") + 
   geom_point(alpha = 1/25) + 
   geom_boxplot(fill=c("purple","green")) +
   #geom_jitter(width = 0.3) +
   theme_bw() + 
   theme(panel.border = element_blank())
+
+ggsave(foo, file = "~/CurrentLx/newcastleModules/MRes/salsabila/recol.pdf", width = 8.09, height = 5)
+
+foo <- ggplot(salsa, aes(Condition, dprime, group=Condition)) + 
+  scale_y_continuous(name = "Familiarity Parameter (d\')") + 
+  scale_x_discrete(name = "\nExperimental Condition") + 
+  geom_point(alpha = 1/25) + 
+  geom_boxplot(fill=c("purple","green")) +
+  #geom_jitter(width = 0.3) +
+  theme_bw() + 
+  theme(panel.border = element_blank())
+
+ggsave(foo, file = "~/CurrentLx/newcastleModules/MRes/salsabila/dprime.pdf", width = 8.09, height = 5)
+
+foo <- ggplot(salsa, aes(Condition, AUROC, group=Condition)) + 
+  scale_y_continuous(name = "Overall Performance (AUROC)") + 
+  scale_x_discrete(name = "\nExperimental Condition") + 
+  geom_point(alpha = 1/25) + 
+  geom_boxplot(fill=c("purple","green")) +
+  #geom_jitter(width = 0.3) +
+  theme_bw() + 
+  theme(panel.border = element_blank())
+
+ggsave(foo, file = "~/CurrentLx/newcastleModules/MRes/salsabila/auroc.pdf", width = 8.09, height = 5)
 
 ggplot(salsa, aes(Clump.Even, TimeToCompletion, group=Clump.Even)) + 
   scale_y_continuous(name = "Time To Completion (mins)") + 
@@ -100,14 +133,6 @@ ggplot(salsa, aes(Clump.Even, TimeToCompletion, group=Clump.Even)) +
   theme_bw() + 
   theme(panel.border = element_blank())
 
-ggplot(salsa, aes(Clump.Even, TimeToCompletion, group=Clump.Even)) + 
-  scale_y_continuous(name = "Time To Completion (mins)") + 
-  scale_x_discrete(name = "\nExperimental Condition") + 
-  geom_point(alpha = 1/25) + 
-  geom_boxplot(fill=c("purple","green")) +
-  #geom_jitter(width = 0.3) +
-  theme_bw() + 
-  theme(panel.border = element_blank())
 
 
 
