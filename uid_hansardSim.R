@@ -1,7 +1,10 @@
+library(devtools)
+source_url('https://raw.githubusercontent.com/rbailes/DORM-UIDO/f778fd66c30ce8a127dfac526084db87abeb8cdc/dormUido.R')
 
 
+hansard.vecsall.df <- read.csv("~/CurrentLx/infoTheory/localCailScripts/HansardOriginalBitArrays.csv",header=F)
 
-#convert the dataframe back to a list of vectors for use in the sim below
+#convert the dataframe to a list of vectors for use in the sim below
 hansard.vecs.list <- as.list(as.data.frame(t(hansard.vecsall.df)))
   
 
@@ -105,7 +108,6 @@ while (currenttrial <= niter)
 
 #bind vectors into a data frame and add column names
 propnoise.df <- data.frame(trials,noises,absNoise,stringtypes,dorms)
-#colnames(propnoise.df) <- c("Trial","NoiseProp","VecType")
 
 
 propnoise.df$trials <- as.numeric(as.character(propnoise.df$trials))
@@ -116,8 +118,8 @@ propnoise.df$dorms <- as.numeric(as.character(propnoise.df$dorms))
 
 propnoise.df$bigLoss <- ifelse(propnoise.df$noises >= 0.5, 1, 0)
 
-write.csv(propnoise.df,file = "~/constantentropy/", row.names = F)
-propnoise.df <- read.csv(file = "~/constantentropy/", header=T)
+write.csv(propnoise.df,file = "~/constantentropy/hansardSim.csv", row.names = F)
+propnoise.df <- read.csv(file = "~/constantentropy/hansardSim.csv", header=T)
 
 propnoise.df$stringtypes <- ordered(propnoise.df$stringtypes, levels = c("asymmetric","randomized","original","uido-optimized"))
 
@@ -127,16 +129,7 @@ propnoise.df$stringtypes <- ordered(propnoise.df$stringtypes, levels = c("asymme
 
 library(ggplot2)
 
-#dorm by proportion bits lost
 
-ggplot(propnoise.df, aes(dorms, noises, group=stringtypes)) + 
-  scale_y_continuous(name = "Proportion of Total Bits Lost For Each \"Sentence\"") + 
-  scale_x_discrete(name = "\nDorm") + 
- # geom_point(alpha = 1/25) + 
-  geom_smooth() +
-  #geom_jitter(width = 0.3) +
-  theme_bw() + 
-  theme(panel.border = element_blank())
 
 #box plot
 
@@ -149,7 +142,7 @@ p <- ggplot(propnoise.df, aes(stringtypes, noises, group=stringtypes)) +
   theme_bw() + 
   theme(panel.border = element_blank())
 
-ggsave(p, file = "~/constantentropy/uid-sentSim-totalbits.png", width = 8.09, height = 5)
+ggsave(p, file = "~/constantentropy/uid-hansardSim-totalbits.png", width = 8.09, height = 5)
 
 
 #plotting bigLoss in a bar chart
@@ -170,7 +163,7 @@ q <- ggplot(propnoise.bar.df, aes(stringtypes,NoSentences)) +
   theme_bw() + 
   theme(panel.border = element_blank())
 
-ggsave(q, file = "~/constantentropy/uid-sentSim-majority.png", width = 8.09, height = 5)
+ggsave(q, file = "~/constantentropy/uid-hansardSim-majority.png", width = 8.09, height = 5)
 
 
 #box plot of dorms by stringtype
@@ -184,13 +177,13 @@ k <- ggplot(propnoise.df, aes(stringtypes, dorms, group=stringtypes)) +
   theme_bw() + 
   theme(panel.border = element_blank())
 
-ggsave(k, file = "~/constantentropy/uid-sentSim-dorms.png", width = 8.09, height = 5)
+ggsave(k, file = "~/constantentropy/uid-hansardSim-dorms.png", width = 8.09, height = 5)
 
 
 
 #modeling
 #get rid of the ordering of the levels of stringtypes, as that was just for plotting purposes
-propnoise.df$stringtypes <- as.factor(propnoise.df$stringtypes)
+propnoise.df$stringtypes <- as.factor(as.character(propnoise.df$stringtypes))
 
 library(lme4)
 #simple linear
@@ -344,7 +337,7 @@ propnoise.df$dorms <- as.numeric(as.character(propnoise.df$dorms))
 
 propnoise.df$bigLoss <- ifelse(propnoise.df$noises >= 0.5, 1, 0)
 
-write.csv(propnoise.df,file = "~/constantentropy/uid_sentSimOneWordNoises.csv", row.names = F)
-propnoise.df <- read.csv(file = "~/constantentropy/uid_sentSimOneWordNoises.csv", header=T)
+write.csv(propnoise.df,file = "~/constantentropy/uid_hansardSimOneWordNoises.csv", row.names = F)
+propnoise.df <- read.csv(file = "~/constantentropy/uid_hansardSimOneWordNoises.csv", header=T)
 
 propnoise.df$stringtypes <- ordered(propnoise.df$stringtypes, levels = c("asymmetric","randomized","original","uido-optimized"))
