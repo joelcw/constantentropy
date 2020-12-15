@@ -117,13 +117,13 @@ library(RColorBrewer)
 plot.df <- melt(data = strings.df, id.vars = c("X", "Iteration","Lengths"), measure.vars = c("Dorm", "Uido","DormUido"))
 
 p <- ggplot(plot.df, aes(Lengths, value, color=variable)) + 
+  #scale_y_continuous(limits = c(0,2)) +
   labs(y = "Bits", x = "\nLength of Array", color="") +
   geom_smooth() +
-  scale_color_manual(labels = c("DORM(random array)","DORM(UIDO)", "DORM(random array) - DORM(UIDO)")) +
   theme_bw() + theme(panel.border = element_blank()) +
-  theme(legend.position = c(0.49, 0.2),
-        legend.direction = "horizontal") +
-  scale_color_hue(l=40)
+  theme(legend.position = c(0.6, 0.4),
+        legend.direction = "vertical") +
+  scale_color_hue(l=40, labels = c("DORM(random array)","DORM(UIDO)","DORM(random array) - DORM(UIDO)"))
 
 
 ggsave(p, file = "~/constantentropy/dormLengthSim.png", width = 8.09, height = 5)
@@ -131,14 +131,18 @@ ggsave(p, file = "~/constantentropy/dormLengthSim.png", width = 8.09, height = 5
 
 plot2.df <- melt(data = strings2.df, id.vars = c("X", "Iteration","Lengths"), measure.vars = c("Dorm", "Uido","DormUido"))
 
+
 q <- ggplot(plot2.df, aes(Lengths, value, color=variable)) + 
   labs(y = "Bits", x = "\nLength of Array", color="") +
+  #scale_y_continuous(limits = c(0,8)) +
   geom_smooth() +
-  scale_color_manual(labels = c("DORM(random array)","DORM(UIDO)", "DORM(random array) - DORM(UIDO)")) +
+  #geom_point(alpha = 0.1) +
   theme_bw() + theme(panel.border = element_blank()) +
-  theme(legend.position = c(0.49, 0.2),
-        legend.direction = "horizontal") +
-  scale_color_hue(l=40)
+  theme(legend.position = c(0.54, 0.41),
+        legend.direction = "vertical") +
+  scale_color_hue(l=40, labels = c("DORM(random array)","DORM(UIDO)","DORM(random array) - DORM(UIDO)"))
+  #scale_colour_manual(values = c("red","blue","green"), labels = c("DORM(random array)", "DORM(random array) - DORM(UIDO)","DORM(UIDO)"))
+  
 ggsave(q, file = "~/constantentropy/dormLengthZipfSim.png", width = 8.09, height = 5)
 
 
