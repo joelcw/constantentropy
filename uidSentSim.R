@@ -231,6 +231,7 @@ ggsave(k, file = "~/constantentropy/uid-sentSim-dorms.png", width = 8.09, height
 #get rid of the ordering of the levels of stringtypes, as that was just for plotting purposes
 propnoise.df$stringtypes <- as.factor(propnoise.df$stringtypes)
 
+
 library(lme4)
 #simple linear
 totalbits.fit <- lm(absNoise~stringtypes, data=propnoise.df)
