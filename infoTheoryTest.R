@@ -4,7 +4,7 @@ library(plyr)
 ####For English data.
 ####Read the file of CorpusSearch codes into an R data frame.
 
-foo <- read.delim("outputs/infoTheoryTest.ymeb.cod.ooo",header=F,sep=":")
+foo <- read.delim("~/constantentropy/outputs/infoTheoryTest.ymeb.cod.ooo",header=F,sep=":")
 
 
 ####Give appropriate column names to the columns
@@ -112,27 +112,47 @@ ggsave(p, file = "infoTheory-posObjsbjmatsub-English.pdf", width = 8, height = 5
 library(lme4)
 #Zing the year around the mean year
 objsbjNOinvq.data$zYear <- scale(objsbjNOinvq.data$Year, center=TRUE, scale=TRUE)
-sbj.fit <- glmer(OV~(1|ID)+Clause+zYear+SbjType+Clause*SbjType, family = binomial, data=objsbjNOinvq.data)
-summary(sbj.fit)
-sbjNoInteract.fit <- glmer(OV~(1|ID)+zYear+SbjType+Clause, family = binomial, data=objsbjNOinvq.data)
-summary(sbjNoInteract.fit)
-anova(sbj.fit,sbjNoInteract.fit)
 
-#trying poisson regression
-#convert to count data by unique values of the column variables,using plyr count
-sbj.count.data <- count(objsbjNOinvq.data, c("OV","Clause","SbjType","zYear","ID"))
-sbj.count.data.fit1 <- glm(formula = freq ~ OV + Clause + SbjType + zYear + Clause*SbjType + OV*SbjType + zYear*Clause + zYear*SbjType + zYear*OV + zYear*SbjType*Clause, family = "poisson", data = sbj.count.data)
-sbj.count.data.ClauseOV <- glm(formula = freq ~ OV + Clause + SbjType + zYear + Clause*OV + Clause*SbjType + OV*SbjType + zYear*Clause + zYear*SbjType + zYear*OV + zYear*SbjType*Clause, family = "poisson", data = sbj.count.data)
-sbj.count.data.ClauseOVSbj <- glm(formula = freq ~ OV + Clause + SbjType + zYear + Clause*OV + Clause*SbjType + OV*SbjType + zYear*Clause + zYear*SbjType + zYear*OV + Clause*OV*SbjType + zYear*SbjType*Clause, family = "poisson", data = sbj.count.data)
+#Make constrasts consistent
+objsbjNOinvq.data$ObjTypeRelevel <- relevel(objsbjNOinvq.data$ObjType, ref="posobj")
+objsbjNOinvq.data$SbjTypeRelevel <- relevel(objsbjNOinvq.data$SbjType, ref="nomsbj")
 
-anova(sbj.count.data.fit1,sbj.count.data.ClauseOV,test="Chisq")
-anova(sbj.count.data.ClauseOV,sbj.count.data.ClauseOVSbj,test="Chisq")
-summary(sbj.count.data.ClauseOVSbj)
+sbjobj.fit <- glmer(OV~(1|ID)+Clause+zYear+SbjTypeRelevel+ObjTypeRelevel+SbjTypeRelevel:zYear, family = binomial, data=objsbjNOinvq.data)
+summary(sbjobj.fit)
+sbjobjNoYear.fit <- glmer(OV~(1|ID)+Clause+zYear+SbjTypeRelevel+ObjTypeRelevel, family = binomial, data=objsbjNOinvq.data)
+sbj.obj.fit <- glmer(OV~(1|ID)+Clause+zYear+SbjTypeRelevel+ObjTypeRelevel, family = binomial, data=objsbjNOinvq.data)
+basic.fit <- glmer(OV~(1|ID)+Clause+zYear, family = binomial, data=objsbjNOinvq.data)
 
-#same with mixed effects
-sbj.count.data.fit2 <- glmer(formula = freq ~ (1|ID) + OV + Clause + SbjType + zYear + Clause*SbjType + OV*SbjType  + zYear*OV, family = "poisson", data = sbj.count.data)
-sbj.count.data.fit3 <- glmer(formula = freq ~ (1|ID) + OV + Clause + SbjType + zYear + Clause*SbjType + OV*SbjType  + zYear*OV + OV*Clause, family = "poisson", data = sbj.count.data)
-anova(sbj.count.data.fit3,sbj.count.data.fit2)
+summary(sbjobjNoYear.fit)
+anova(sbj.obj.fit,basic.fit)
+
+#For Ice
+objsbjNOinvqIce.data$ObjTypeRelevel <- relevel(objsbjNOinvqIce.data$ObjType, ref="pronobj")
+objsbjNOinvqIce.data$SbjTypeRelevel <- relevel(objsbjNOinvqIce.data$SbjType, ref="pronsbj")
+objsbjNOinvqIce.data$zYear <- scale(objsbjNOinvqIce.data$Year, center=TRUE, scale=TRUE)
+
+sbj.obj.fit <- glmer(OV~(1|ID)+Clause+SimpleGenre+zYear+SbjTypeRelevel+ObjTypeRelevel, family = binomial, data=objsbjNOinvqIce.data)
+basic.fit <- glmer(OV~(1|ID)+SimpleGenre+Clause+zYear, family = binomial, data=objsbjNOinvqIce.data)
+
+summary(sbjobjNoYear.fit)
+anova(sbj.obj.fit,basic.fit)
+
+
+
+#More complex ones are not converging, so standard regressions:
+sbjobjYear.fit <- glm(OV~Clause+zYear+SbjTypeRelevel+ObjTypeRelevel+zYear*SbjTypeRelevel*ObjTypeRelevel, family = binomial, data=objsbjNOinvq.data)
+summary(sbjobjYear.fit)
+sbjobjNoYear.fit <- glm(OV~Clause+zYear+SbjTypeRelevel+ObjTypeRelevel+SbjTypeRelevel*ObjTypeRelevel, family = binomial, data=objsbjNOinvq.data)
+summary(sbjobjNoYear.fit)
+anova(sbjobjNoYear.fit, sbjobjYear.fit, test="Chisq")
+
+#For Ice
+sbjobjYear.fit <- glm(OV~Clause+SimpleGenre+zYear+SbjTypeRelevel+ObjTypeRelevel+zYear*SbjTypeRelevel*ObjTypeRelevel, family = binomial, data=objsbjNOinvqIce.data)
+summary(sbjobjYear.fit)
+sbjobjNoYear.fit <- glm(OV~Clause+SimpleGenre+zYear+SbjTypeRelevel+ObjTypeRelevel+SbjTypeRelevel*ObjTypeRelevel, family = binomial, data=objsbjNOinvqIce.data)
+summary(sbjobjNoYear.fit)
+anova(sbjobjNoYear.fit, sbjobjYear.fit, test="Chisq")
+
 
 
 
@@ -151,7 +171,7 @@ p <- ggplot(invq.data, aes(Year, OV, color=SbjType)) + labs(y = "Proportion of O
 
 ####Read the file of CorpusSearch codes into an R data frame.
 
-foo <- read.delim("outputs/infoTheoryTest.ice.cod.ooo",header=F,sep=":")
+foo <- read.delim("~/constantentropy/outputs/infoTheoryTest.ice.cod.ooo",header=F,sep=":")
 
 
 ####Give appropriate column names to the columns
@@ -181,6 +201,10 @@ objsbjice.data$OV <- as.numeric(as.character(objsbjice.data$OV))
 
 
 ##Gotta do invq separately, without having a third variable, because there isn't enough data
+
+
+
+objsbjNOinvqIce.data$SimpleGenre <- ifelse(objsbjNOinvqIce.data$Genre == "nar", "nar", "other")
 
 objsbjNOinvqIce.data <- subset(objsbjice.data, Clause != "invq")
 
