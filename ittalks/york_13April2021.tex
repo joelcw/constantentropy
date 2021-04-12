@@ -32,7 +32,7 @@
 %gets rid of navigation symbols
 \setbeamertemplate{navigation symbols}{}
 
-\title{How I learned to stop worrying and love the leave}
+\title{An information theoretic approach to language change}
 \author{Joel C. Wallenberg\\\texttt{joel.wallenberg@ncl.ac.uk}}
 \institute{\includegraphics[scale = 0.2]{caillogo.png}}
 %\date[]{14th May, 2019}
@@ -41,6 +41,17 @@
 
 \begin{frame}[plain]
 \titlepage
+\end{frame}
+
+
+\begin{frame}{A Mystery in Language Change} 
+	
+	\begin{itemize}
+		\item A \textbf{Constant Rate Effect} \small{(first described in \citealt{kroch1989})}: when a change in some linguistic variable is in progress, some linguistic contexts favour one variant over another \textbf{without changing the change} (i.e. stopping, slowing, accelerating, etc.).
+		\item Using information theory, we can not only explain a CRE, but predict the existence of one.
+		\item This CRE shows speakers unconsciously solving a complex planning problem to achieve \textbf{information uniformity}.
+	\end{itemize}
+
 \end{frame}
 
 \begin{frame}{``Constraints on the Adaptiveness of Information in Language'' (CAIL)} 
@@ -112,26 +123,28 @@
 \end{frame}
 
 
-\begin{frame}{``Uniform Information Density'' in language} 
+\begin{frame}{``Information Uniformity'' in Sentences} 
 \begin{itemize}
-	\item Any linguistic unit can be thought of as a signal to the overall content/function of an utterance.
-	\item ``noise'' is any interference, including: noise, memory, other processing costs, etc.
-	\item Speakers tend to spread information content across utterances as uniformly as possible \small{(\citealt{fenkfenk1980,aylettturk2004,levyjaeger2007}; Cuskley, Bailes \& Wallenberg, \textsl{Forthcoming})}.\nocite{cuskleyWallenberg2021}
+	\item Suppose morphemes, words, phrases are signals to the overall interpretation/function of an utterance.
+	\begin{itemize} \item[] \textbf{low probability $\rightarrow$ high information content} \end{itemize}
+	\item Speakers tend to spread information across utterances as uniformly as possible, perhaps to mitigate effects of ``noise'':\\ \begin{itemize}
+		\item[] \footnotesize{(\citealt{fenkfenk1980,aylettturk2004,levyjaeger2007}; Cuskley, Bailes \& Wallenberg, \textsl{Forthcoming})}\nocite{cuskleyWallenberg2021}
+	\end{itemize}
 \end{itemize}
 \begin{exe}
 	\ex How big is the family $[$(that) you cook for$]$?
 \end{exe}
 
-\begin{center}
-	If \textsl{that} is deleted, more information is carried by \textsl{you}, so information is more dense.
-\end{center}
+\begin{itemize}
+	\item If \textsl{that} is deleted, more information is carried by \textsl{you}, creating a denser pocket of information.
+\end{itemize}
 
 
 \end{frame}
 
 
 
-\begin{frame}{UID and noise resistance} 
+\begin{frame}{``Information Uniformity'' in Sentences} 
 
 \begin{center}
 \includegraphics[scale=0.585]{../sentence1info.png} 
@@ -139,7 +152,7 @@
 
 \end{frame}
 
-\begin{frame}{UID and noise resistance} 
+\begin{frame}{``Information Uniformity'' in Sentences} 
 
 \begin{center}
 	\includegraphics[scale=0.585]{../sentence2info.png} 
@@ -190,25 +203,45 @@
 
 	\includegraphics[width=1.04\textwidth]{FullClauseFig.png}
 	\begin{itemize}
-	\item Note the Constant Rate Effect \citep{kroch1989}, shown for English by \citet{pintzuktaylor2006}.
+	\item Note the Constant Rate Effect (CRE), shown for English by \citet{pintzuktaylor2006}.
 \end{itemize}	
 \end{frame}
 
 \begin{frame}{OV-to-VO and Information Theory} 
 	
-\begin{enumerate}
-	\item Pronouns are closed-class and frequent, and so are low information content, (cf. \citealt{shannon1948}) in comparison with nominal DPs (e.g., \textsl{you} vs. \textsl{the politician}). For example, the average information content value for pronouns in the Penn Parsed Corpus of Modern British English (PPCMBE; \citealt{ppcmbe2}) is 11.7 bits.
-	\item Nominal DP Objects are high information content in general, because any particular DP will be low probability. There are more common noun lexemes than any other part of speech, and so any given noun is lower probability by virtue of belonging to a very large set. The probability of a given noun \textit{combined with} a determiner and/or modifiers is necessarily lower than the probability of the noun alone. For example, the average information content for nouns in PPCMBE is 13.7 bits, and we can reasonably expect the average information content is much higher for nominal DPs, since they can be of arbitrary complexity.
-	\item Verbs are mid-level in frequency and so also in information content: lower than nominal DPs, on average, but higher than pronouns. For example, the average information content for lexical verbs in the PPCMBE is 13.5 bits.
-\end{enumerate}
+	\begin{center}
+\begin{tabular}{c c}
+	
+	\textbf{Constituent Type} & \textbf{Average Information Content} \\ \hline
+	Pronominal DP & low ($\approx$ 11.7 bits)\\
+	Nominal DP & HIGH ( > 13.7 bits) \\
+	Lexical  Verb & \textsc{mid} ($\approx$ 13.5 bits) \\
+\end{tabular}
+\\\vspace*{5mm}
+ \textbf{Sbj Aux Obj V}\\
+\textbf{Sbj Aux V Obj}\\\vspace*{5mm}
+\textbf{Hypothesis_1:} VO is favoured when Sbj and Obj are the same type.\\\vspace*{1mm} (low \textsc{mid} low , HIGH \textsc{mid} HIGH) \textbf{vs} (low low \textsc{mid}, HIGH HIGH \textsc{mid})  \\\vspace*{4mm}
+\textbf{Hypothesis_2:} OV is favoured when Sbj, Obj are \textbf{NOT} the same type.\\\vspace{1mm} (low HIGH \textsc{mid} , HIGH low \textsc{mid}) \textbf{vs} (low \textsc{mid} HIGH, HIGH \textsc{mid} low)\\\vspace*{4mm}
+\textbf{Hypothesis_3:} These effects are orthogonal to the change (a CRE).
+\end{center}
+\end{frame}
 
-Given these generalizations, we developed and tested the following hypotheses.
+\begin{frame}{OV-to-VO and Information Theory} 
 
-\begin{itemize}
-	\item When Subject and Object are of the same type (i.e., both pronominal or both nominal), VO clause structure is statistically favored.
-	\item Otherwise, OV clause structure is favored.
-	\item These effects are orthogonal to the OV to VO change, but apply as constants throughout the course of the change.
-\end{itemize}
+
+\begin{exe}	
+	\ex \gll sua sal ye yure sinnes les.\\
+so shall {you (\textbf{\small{low}})} your {sins (\textbf{HIGH})} {lose \textbf{(\textsc{mid})}}\\
+\quad ``In this way, you will let go of your sins.''\\
+(\textsl{Rule of St. Benet}, Yorkshire, date: 1425)\\\vspace{5mm}
+
+
+\ex \gll þabbes sal quaintelike drahe hir to hir\\
+{the-abbess (\textbf{HIGH})} shall wisely {draw (\textbf{mid})} {her (\textbf{\small{low}})} to herself\\
+(\textsl{Rule of St. Benet}, Yorkshire, date: 1425)
+
+	
+\end{exe}
 \end{frame}
 
 
@@ -224,20 +257,120 @@ Given these generalizations, we developed and tested the following hypotheses.
 \section{Study 2: OV and VO variation in historical Icelandic}
 
 
-\begin{frame}{DORM} 
+\begin{frame}{``DORM'': Deviation of the Rolling Mean} 
 
+\begin{itemize}
+	\item A \textbf{summary statistic} for how informationally uniform a sentence is (Cuskley, Bailes \& Wallenberg, \textsl{Forthcoming}).
+\end{itemize}
+	\begin{center}
+		 \textbf{low DORM} $\rightarrow$ \textbf{more uniform}\\
+		 \textbf{high DORM} $\rightarrow$ \textbf{more lopsided}
+	\end{center}
+\begin{itemize}
 
-XXX
-lemmas
+	\item Based on strings of lemmas for Icelandic sentences, due to large number of morphological forms (and some spelling variation). 
+\end{itemize}
 
 \end{frame}
+
+\begin{frame}{``DORM'': Deviation of the Rolling Mean} 
+
+	\begin{center}
+\begin{tabular}{c c c c c c}
+			en & eg & skal & sjá & yður & aftur \\
+			6.79 & 6.15 & 10.1 & 9.25 & 6.15 & 10.4\\
+	\end{tabular}
+\end{center}
+\end{frame}
+
+\begin{frame}{``DORM'': Deviation of the Rolling Mean} 
+	
+	\begin{center}
+	\begin{tabular}{c c c c c c}
+		en & eg & skal & sjá & yður & aftur \\
+		\textbf{6.79} & \textbf{6.15} & 10.1 & 9.25 & 6.15 & 10.4\\
+		6.47 & & & & & 
+	\end{tabular}
+	\end{center}
+	
+\end{frame}
+
+\begin{frame}{``DORM'': Deviation of the Rolling Mean} 
+	
+	\begin{center}
+		\begin{tabular}{c c c c c c}
+			en & eg & skal & sjá & yður & aftur \\
+			6.79 & \textbf{6.15} & \textbf{10.1} & 9.25 & 6.15 & 10.4\\
+			6.47 & 8.12 & & & & 
+		\end{tabular}
+	\end{center}
+	
+\end{frame}
+
+\begin{frame}{``DORM'': Deviation of the Rolling Mean} 
+	
+	\begin{center}
+		\begin{tabular}{c c c c c c}
+			en & eg & skal & sjá & yður & aftur \\
+			6.79 & 6.15 & \textbf{10.1} & \textbf{9.25} & 6.15 & 10.4\\
+			6.47 & 8.12 & 9.67 & & & 
+		\end{tabular}
+	\end{center}
+	
+\end{frame}
+
+\begin{frame}{``DORM'': Deviation of the Rolling Mean} 
+	
+	\begin{center}
+		\begin{tabular}{c c c c c c}
+			en & eg & skal & sjá & yður & aftur \\
+			6.79 & 6.15 & 10.1 & \textbf{9.25} & \textbf{6.15} & 10.4\\
+			6.47 & 8.12 & 9.67 & 7.70 & & 
+		\end{tabular}
+	\end{center}
+	
+\end{frame}
+
+\begin{frame}{``DORM'': Deviation of the Rolling Mean} 
+	
+	\begin{center}
+		\begin{tabular}{c c c c c c}
+			en & eg & skal & sjá & yður & aftur \\
+			6.79 & 6.15 & 10.1 & 9.25 & \textbf{6.15} & \textbf{10.4}\\
+			6.47 & 8.12 & 9.67 & 7.70 & 8.29 & \\
+		\end{tabular}
+	\end{center}
+	
+\end{frame}
+
+\begin{frame}{``DORM'': Deviation of the Rolling Mean} 
+	
+	\begin{center}
+		\begin{tabular}{c c c c c c}
+			en & eg & skal & sjá & yður & aftur \\
+			6.79 & 6.15 & 10.1 & 9.25 & \textbf{6.15} & \textbf{10.4}\\
+			6.47 & 8.12 & 9.67 & 7.70 & 8.29 & \\
+		\end{tabular} \\\vspace*{5mm}
+		Sample variance of rolling means = 1.33 bits\\
+		(plus a further calibration for length and lexical idiosyncracy)\\\vspace*{3mm}
+		\textbf{low DORM} $\rightarrow$ \textbf{more uniform}\\
+		\textbf{high DORM} $\rightarrow$ \textbf{more lopsided}
+	\end{center}
+	
+\end{frame}
+
+
+
+
+
+
 
 
 \begin{frame}%{OV, OV, and Information Uniformity in Icelandic} 
 	
 	
 	\begin{center}
-	\includegraphics[scale = 0.5]{NewFigType3.png}
+	\includegraphics[scale = 0.58]{NewFigType3.png}
 \end{center}
 	
 \end{frame}
@@ -251,20 +384,16 @@ lemmas
 	
 \end{frame}
 
-\begin{frame}{What Doesn't Change, Doesn't Change (Kroch, Labov, p.c.)} 
-	
-	
-	\begin{center}
-		variance XXX
-	\end{center}
-	
-\end{frame}
 
 \begin{frame}{Conclusions} 
 	
 	
 	\begin{itemize}
-		\item XXX
+		\item It is exciting to be able to predict patterns of language change with this level of precision.\pause
+		\item We \textbf{predicted and explained} a very subtle Constant Rate Effect on the VO-to-VO changes in both Icelandic and English, which is unexpected without an information theoretic approach.\pause
+		\item The average uniformity of sentences is constant across the history of Icelandic.\pause
+		\item Even while generations of speakers are participating in the OV-to-VO change, they use their syntactic resources to keep a target of information uniformity.\pause
+		\item This complex unconscious planning could be a deep property of the linguistic system (and perhaps the memory system).
 	\end{itemize}
 	
 \end{frame}
@@ -274,10 +403,25 @@ lemmas
 	
 	
 	\begin{itemize}
-		\item XXX
+		\item \textbf{Replicate:} for historical English in lemmatised versions of the \textsl{Penn Parsed Historical Corpora}, and hopefully \textsl{York Corpus of Old English Prose} \citep{ycoe}\pause
+		\item \textbf{Collaboration with Neuroscience:} Information uniformity, episodic memory, and ageing (Wallenberg, Smulders, Cuskley \& Read, \textsl{TBS to Scientific Reports})\pause
+	\item \textbf{Public Engagement / Impact:} Centre for Life, National Centre for the Written Word\pause
+		\item \textbf{Crazy idea}: language and ``ruin''\\ (collaboration with York Actuarial Science?)
 	\end{itemize}
 	
 \end{frame}
+
+\begin{frame}{Acknowledgements}
+	\begin{center}
+		
+		Thanks to Rachael Bailes, Christine Cuskley, and colleagues at the CBE.\\This research was funded by ESRC grant ES/T005955/1.
+		\url{https://github.com/joelcw/constantentropy}\\
+		\url{https://github.com/joelcw/iceBits}\\\vspace{3mm}
+		\includegraphics[scale = 0.2]{caillogo.png}
+		\includegraphics[scale = 0.4]{CBElogo.jpg}
+	\end{center}
+\end{frame}
+
 
 
 
@@ -299,5 +443,61 @@ lemmas
 	\end{center}
 \end{frame}
 
+\begin{frame}{Statistics: OV-to-VO in English} 
+	
+	\begin{center}
+		\texttt{OV $\sim$ Clause + zYear + SbjType + ObjType + SbjType*ObjType*zYear}\\\vspace{5mm}
+
+\begin{tabular}{c c c}
+\textbf{Term} & \textbf{$\beta$} & \textbf{p-value} \\ \hline
+pronSbj:pronObj & -0.66 & 0.015\\
+nomSbj:nomObj & -0.67 & 0.01 \\
+
+	
+\end{tabular}\\\vspace{5mm}
+
+	Slope estimates not significantly non-zero for interaction with Text Date, $ 0.221 \leq p \leq 0.884$ depending on the argument combinations.
+\end{center}
+
+\end{frame}
+
+
+\begin{frame}{Statistics: OV-to-VO in Icelandic} 
+	
+	\begin{center}
+		\texttt{OV $\sim$ Clause + zYear + SbjType + ObjType + SbjType*ObjType*zYear}\\\vspace{5mm}
+
+	\begin{tabular}{c c c}
+		\textbf{Term} & \textbf{$\beta$} & \textbf{p-value} \\ \hline
+		pronSbj:pronObj & -0.271 & 0.085\\
+		nomSbj:nomObj & -0.271 & 0.085 \\
+		nomSbj:quantObj & -0.554 & $9.36 \times 10^{-3}$
+		
+	\end{tabular}\\\vspace{5mm}
+
+		Slope estimates not significantly non-zero for interaction with Text Date, $ 0.221 \leq p \leq 0.884$ depending on the argument combinations.
+	\end{center}
+	
+\end{frame}
+
+\begin{frame}{Statistics: OV and VO variation in historical Icelandic} 
+	
+	\begin{center}
+		\texttt{SentDormUido $\sim$ (1 | TextId) + Year + OV + Clause + SimpleGenre +  ObjType + \\ SbjType + SbjType * ObjType * OV}\\\vspace{5mm}
+	
+	\begin{tabular}{c c c}
+		\textbf{Term} & \textbf{$\beta$} & \textbf{p-value} \\ \hline
+		pronSbj:pronObj:OV & 2.66 & 0.014\\
+		nomSbj:nomObj:OV  & 2.66 & 0.014\\
+		pronSbj:nomObj:OV  & -2.66 & 0.014\\
+		nomSbj:pronObj:OV  & -2.66 & 0.014\\
+	
+		
+	\end{tabular}\\\vspace{5mm}
+
+		Effect of Text Date on calibrated DORM not significantly different from zero: \\$0.524 \leq p \leq 0.579$
+	\end{center}
+	
+\end{frame}
 
 \end{document}
