@@ -1,180 +1,93 @@
 library(ggplot2)
 library(RColorBrewer)
 library(ggridges)
+library(ggbeeswarm)
+library(tidyr)
+library(dplyr)
+library(lmerTest)
+library(lmodel2)
+library(lme4)
 
-salsa <- read.csv(file="~/constantentropy/memory/allWordsTogether.csv", header=T)
+###Old stuff:
+#salsaOld <- read.csv(file="~/constantentropy/memory/allWordsTogether.csv", header=T)
 #salsa <- subset(salsa, WorkerType == "turker")
-salsa <- subset(salsa, Age != "")
-salsa <- subset(salsa, Age != "unknown")
-salsa <- subset(salsa, Clump.Even != "")
-salsa <- subset(salsa, TimeToCompletion != "NA")
-salsa <- droplevels(salsa)
-
-part <- read.csv(file="CurrentLx/newcastleModules/MRes/salsabila/0A_ParticipantInfo.csv", header=T)
-
-salsa$Age <- as.numeric(as.character(salsa$Age))
-salsa$TimeToCompletion <- as.numeric(as.character(salsa$TimeToCompletion))
-salsa$R <- as.numeric(as.character(salsa$R))
-salsa$dprime <- as.numeric(as.character(salsa$dprime))
-salsa$AUROC <- as.numeric(as.character(salsa$AUROC))
-
-salsa$Condition <- ifelse(salsa$Clump.Even == "Clump", "Clumped","Smooth")
-
-'partInfo <- data.frame(salsa$ParticipantIdentifier,salsa$Age,salsa$Gender,salsa$Low.Start.High.Start,salsa$Clump.Even,salsa$NativeSpeaker,salsa$EngAoA,salsa$Bilingual,salsa$WorkerType,salsa$TimeToCompletion)
-
-colnames(partInfo) <- c("Participant","Age","Sex","LowOrHighStart","ClumpedOrEven","NativeSpeaker","EngAoA","Bilingual","WorkerType","TimeToCompletion")
-
-highlowrun <- read.csv(file="~/constantentropy/memory/highlowFull.csv", header=T)
-
-highlowrun$File <- as.character(highlowrun$File)
-
-#make another column for whether the run is on high or low freq words
-pattern <- "^(.*)_responses_((low)|(high)).xlsx"
-highlowrun$Frequency <- gsub(pattern,"\\2",highlowrun$File)
-
-#make another column for participant id
-highlowrun$Participant <- gsub(pattern,"\\1",highlowrun$File)
-
-#merge the participant info from salsa with the highlowrun data
-highlowFull <- merge(highlowrun, partInfo, by=c("Participant"))
-
-salsa <- subset(salsa, Age != "" && Age != "unknown")
-
-#salsa <- subset(salsa, Clump.Even != "")
-#salsa <- droplevels(salsa)
-highlowFull <- subset(highlowFull, Age != "unknown")
-highlowFull <- subset(highlowFull, Age != "")
-highlowFull <- subset(highlowFull, ClumpedOrEven != "")
-highlowFull <- droplevels(highlowFull)
+#highlowFullOld <- read.csv(file="~/constantentropy/memory/highlowFull.csv", header=T)
 
 
-#salsa$Age <- as.numeric(as.character(salsa$Age))
-#salsa$TimeToCompletion <- as.numeric(as.character(salsa$TimeToCompletion))
-highlowFull$Age <- as.numeric(as.character(highlowFull$Age))
-highlowFull$TimeToCompletion <- as.numeric(as.character(highlowFull$TimeToCompletion))
-highlowFull$Frequency <- as.factor(highlowFull$Frequency)
+#####Current Dataset:
+####Note that participants with TimetoCompletion < 12 or > 51 have been excluded, which are below 5th percentile and above the 95th percentile.
+jennyData <- read.csv(file="~/constantentropy/memory/dataAug2021.csv", header=T)
 
-write.csv(highlowFull, file="/Documents/highlowFull.csv", row.names = F)'
 
-highlowFull <- read.csv(file="~/constantentropy/memory/highlowFull.csv", header=T)
 
 ####box plots
-foo <- ggplot(highlowFull, aes(ClumpedOrEven, R, group=ClumpedOrEven)) + 
+foo <- ggplot(jennyData, aes(OrderCondition, R, group=OrderCondition)) + 
   scale_y_continuous(name = "Recollection Parameter") + 
   scale_x_discrete(name = "\nExperimental Condition") + 
   geom_point(alpha = 1/25) + 
-  geom_boxplot(fill=c("purple","green","purple","green")) +
+  geom_boxplot(fill=c("purple","green","purple","green","purple","green")) +
   #geom_jitter(width = 0.3) +
-  facet_wrap(~Frequency) +
+  facet_wrap(~WordFreq) +
   theme_bw() + 
   theme(panel.border = element_blank())
 
-ggsave(foo, file = "~/CurrentLx/newcastleModules/MRes/salsabila/recolHighLow.pdf", width = 8.09, height = 5)
+###XXXX GGOT UP TO HERE REVISING XXXX
 
-foo <- ggplot(highlowFull, aes(ClumpedOrEven, dprime, group=ClumpedOrEven)) + 
+ggsave(foo, file = "~/memory/recolAllHighLow.pdf", width = 8.09, height = 5)
+
+foo <- ggplot(jennyData, aes(OrderCondition, dprime, group=OrderCondition)) + 
   scale_y_continuous(name = "Familiarity Parameter (d\')") + 
   scale_x_discrete(name = "\nExperimental Condition") + 
   geom_point(alpha = 1/25) + 
-  geom_boxplot(fill=c("purple","green","purple","green")) +
+  geom_boxplot(fill=c("purple","green","purple","green","purple","green")) +
   #geom_jitter(width = 0.3) +
-  facet_wrap(~Frequency) +
+  facet_wrap(~WordFreq) +
   theme_bw() + 
   theme(panel.border = element_blank())
 
-ggsave(foo, file = "~/CurrentLx/newcastleModules/MRes/salsabila/dprimeHighLow.pdf", width = 8.09, height = 5)
+ggsave(foo, file = "~/memory/dprimeAllHighLow.pdf", width = 8.09, height = 5)
 
 
-foo <- ggplot(highlowFull, aes(ClumpedOrEven, AUROC, group=ClumpedOrEven)) + 
-  scale_y_continuous(name = "Overall Performance (AUROC)") + 
-  scale_x_discrete(name = "\nExperimental Condition") + 
-  geom_point(alpha = 1/25) + 
-  geom_boxplot(fill=c("purple","green","purple","green")) +
-  #geom_jitter(width = 0.3) +
-  facet_wrap(~Frequency) +
-  theme_bw() + 
-  theme(panel.border = element_blank())
-
-ggsave(foo, file = "~/CurrentLx/newcastleModules/MRes/salsabila/aurocHighLow.pdf", width = 8.09, height = 5)
-
-
-foo <- ggplot(salsa, aes(Condition, R, group=Condition)) + 
-  scale_y_continuous(name = "Recollection Parameter") + 
-  scale_x_discrete(name = "\nExperimental Condition") + 
-  geom_point(alpha = 1/25) + 
-  geom_boxplot(fill=c("purple","green")) +
-  #geom_jitter(width = 0.3) +
-  theme_bw() + 
-  theme(panel.border = element_blank())
-
-ggsave(foo, file = "~/CurrentLx/newcastleModules/MRes/salsabila/recol.pdf", width = 8.09, height = 5)
-
-foo <- ggplot(salsa, aes(Condition, dprime, group=Condition)) + 
+foo <- ggplot(jennyData, aes(OrderCondition, AUROC, group=OrderCondition)) + 
   scale_y_continuous(name = "Familiarity Parameter (d\')") + 
   scale_x_discrete(name = "\nExperimental Condition") + 
   geom_point(alpha = 1/25) + 
-  geom_boxplot(fill=c("purple","green")) +
+  geom_boxplot(fill=c("purple","green","purple","green","purple","green")) +
   #geom_jitter(width = 0.3) +
+  facet_wrap(~WordFreq) +
   theme_bw() + 
   theme(panel.border = element_blank())
 
-ggsave(foo, file = "~/CurrentLx/newcastleModules/MRes/salsabila/dprime.pdf", width = 8.09, height = 5)
+ggsave(foo, file = "~/memory/AUROCallHighLow.pdf", width = 8.09, height = 5)
 
-foo <- ggplot(salsa, aes(Condition, AUROC, group=Condition)) + 
-  scale_y_continuous(name = "Overall Performance (AUROC)") + 
-  scale_x_discrete(name = "\nExperimental Condition") + 
-  geom_point(alpha = 1/25) + 
-  geom_boxplot(fill=c("purple","green")) +
-  #geom_jitter(width = 0.3) +
+
+###Same plots in other forms
+
+
+
+####Models, all word freq data together
+jennyData_AllFreqOnly <- subset(jennyData,WordFreq == "AllFreq")
+jennyData_AllFreqOnly <- droplevels(jennyData_AllFreqOnly)
+
+
+####Density plots of R and dprime, making the argument that we should use gamma models 
+ggplot(jennyData) + geom_density(aes(x=dprime, color=WordFreq)) +
+  scale_color_brewer(palette = "Set1") + 
   theme_bw() + 
   theme(panel.border = element_blank())
 
-ggsave(foo, file = "~/CurrentLx/newcastleModules/MRes/salsabila/auroc.pdf", width = 8.09, height = 5)
+####Shapiro-Wilk test for normality
+shapiro.test(jennyData_AllFreqOnly$AUROC)$p.value
+shapiro.test(jennyData_AllFreqOnly$dprime)$p.value
+shapiro.test(jennyData_AllFreqOnly$R)$p.value
+shapiro.test(jennyData[jennyData$WordFreq == "LoFreq",]$AUROC)$p.value
 
-ggplot(salsa, aes(Clump.Even, TimeToCompletion, group=Clump.Even)) + 
-  scale_y_continuous(name = "Time To Completion (mins)") + 
-  scale_x_discrete(name = "\nExperimental Condition") + 
-  geom_point(alpha = 1/25) + 
-  geom_boxplot(fill=c("purple","green")) +
-  #geom_jitter(width = 0.3) +
-  theme_bw() + 
-  theme(panel.border = element_blank())
+#Calculate 3rd moment with sample means, just to confirm positive skew
+mean(((jennyData_AllFreqOnly$R - mean(jennyData_AllFreqOnly$R))/sd(jennyData_AllFreqOnly$R))^3)
 
-
+####XXXGOT UP TO HERE XXX
 
 
-ggplot(salsa, aes(Age, R, color=Clump.Even)) + 
-  labs(y = "R", x = "\nAge") +
-  #  geom_line() +
-  geom_point() +
-  stat_smooth()
-scale_color_brewer(palette = "Set1") + 
-  theme_bw() + theme(panel.border = element_blank())
-
-ggplot(salsa, aes(Age, dprime, color=Clump.Even)) + 
-  labs(y = "dprime", x = "\nAge") +
-  #  geom_line() +
-  geom_point() +
-  stat_smooth()
-scale_color_brewer(palette = "Set1") + 
-  theme_bw() + theme(panel.border = element_blank())
-
-ggplot(salsa, aes(Age, TimeToCompletion, color=Clump.Even)) + 
-  labs(y = "Time To Completion", x = "\nAge") +
-  #  geom_line() +
-  geom_point() +
-  stat_smooth()
-scale_color_brewer(palette = "Set1") + 
-  theme_bw() + theme(panel.border = element_blank())
-
-
-####ridge plots
-ggplot(salsa, aes(R, Clump.Even)) + 
-  labs(y = "Condition", x = "\nR") +
-  theme_bw() + theme(panel.border = element_blank())
-
-
-
-###model fitting
 salsa.Rfit.Gender.Age.Start.Clump.ClumpAge <- glm(R~Gender+Age+Bilingual+Low.Start.High.Start+Clump.Even+Clump.Even:Age, family = gaussian, data=salsa)
 
 salsa.dprimefit.Gender.Age.Start.Clump.ClumpAge <- glm(dprime~Gender+Age+Bilingual+Low.Start.High.Start+Clump.Even+Clump.Even:Age, family = gaussian, data=salsa)
@@ -220,7 +133,7 @@ AIC(salsa.timefit.Gender.Age.Start)
 AIC(salsa.timefit.Gender.Age.Start.Clump)
 
 
-####Models for the high/low separated data
+########Models, word freq data separated by high and low
 library(lme4)
 library(lmerTest)
 highlowFull.Rfit.Sex.Age.Start.Clump.Freq.FreqClump <- lmer(R~(1|Participant)+Sex+Age+Bilingual+LowOrHighStart+ClumpedOrEven+Frequency+Frequency:ClumpedOrEven, data=highlowFull)
