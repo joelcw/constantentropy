@@ -17,7 +17,19 @@ library(lme4)
 #####Current Dataset:
 ####Note that participants with TimetoCompletion < 12 or > 51 have been excluded, which are below 5th percentile and above the 95th percentile.
 results <- read.csv(file="~/constantentropy/memory/dataAug2021.csv", header=T)
+results$TimeToCompletion <- as.numeric(as.character(results$TimeToCompletion))
 
+# Some initial processing. First of all, logs can't cope with 0s so replace these:
+cutoff = 1e-2
+results$dprime[results$dprime<cutoff] = cutoff
+results$R[results$R<cutoff] = cutoff
+
+# Make a normalised AUROC
+results$AUROCnorm = 2*(results$AUROC-0.5)
+results$AUROCnorm[results$AUROCnorm<0]=0.1
+
+results_AllFreqOnly <- subset(results,WordFreq == "AllFreq")
+results_AllFreqOnly <- droplevels(results_AllFreqOnly)
 
 
 ####box plots
@@ -31,7 +43,6 @@ foo <- ggplot(results, aes(OrderCondition, R, group=OrderCondition)) +
   theme_bw() + 
   theme(panel.border = element_blank())
 
-###XXXX GGOT UP TO HERE REVISING XXXX
 
 ggsave(foo, file = "~/memory/recolAllHighLow.pdf", width = 8.09, height = 5)
 
@@ -65,17 +76,7 @@ ggsave(foo, file = "~/memory/AUROCallHighLow.pdf", width = 8.09, height = 5)
 
 
 
-# Some initial processing. First of all, logs can't cope with 0s so replace these:
-cutoff = 1e-2
-results$dprime[results$dprime<cutoff] = cutoff
-results$R[results$R<cutoff] = cutoff
 
-# Make a normalised AUROC
-results$AUROCnorm = 2*(results$AUROC-0.5)
-results$AUROCnorm[results$AUROCnorm<0]=0.1
-
-results_AllFreqOnly <- subset(results,WordFreq == "AllFreq")
-results_AllFreqOnly <- droplevels(results_AllFreqOnly)
 
 
 ####Density plots of R and dprime, making the argument that we should use gamma models 
@@ -148,37 +149,54 @@ BIC(AUROCfit.Gender.Age.Bilingual.Time.StartCondition.OrderCondition)
 ########Models with WordFreq data separated by high and low
 library(lme4)
 library(lmerTest)
-highlowFull.Rfit.Sex.Age.Start.Clump.Freq.FreqClump <- lmer(R~(1|Participant)+Sex+Age+Bilingual+LowOrHighStart+ClumpedOrEven+Frequency+Frequency:ClumpedOrEven, data=highlowFull)
-highlowFull.Rfit.Sex.Age.Start.Clump.Freq <- lmer(R~(1|Participant)+Sex+Age+Bilingual+LowOrHighStart+ClumpedOrEven+Frequency, data=highlowFull)
-summary(highlowFull.Rfit.Sex.Age.Start.Clump.Freq)
-anova(highlowFull.Rfit.Sex.Age.Start.Clump.Freq.FreqClump,highlowFull.Rfit.Sex.Age.Start.Clump.Freq, test="Chisq")
-AIC(highlowFull.Rfit.Sex.Age.Start.Clump.Freq.FreqClump)
-AIC(highlowFull.Rfit.Sex.Age.Start.Clump.Freq)
-BIC(highlowFull.Rfit.Sex.Age.Start.Clump.Freq.FreqClump)
-BIC(highlowFull.Rfit.Sex.Age.Start.Clump.Freq)
 
-highlowFull.Rfit.Sex.Age.Start.Clump <- lmer(R~(1|Participant)+Sex+Age+Bilingual+LowOrHighStart+ClumpedOrEven, data=highlowFull)
-highlowFull.Rfit.Sex.Age.Start.Freq <- lmer(R~(1|Participant)+Sex+Age+Bilingual+LowOrHighStart+Frequency, data=highlowFull)
-anova(highlowFull.Rfit.Sex.Age.Start.Freq,highlowFull.Rfit.Sex.Age.Start.Clump.Freq, test="Chisq")
-anova(highlowFull.Rfit.Sex.Age.Start.Clump,highlowFull.Rfit.Sex.Age.Start.Clump.Freq, test="Chisq")
+results_highLow <- subset(results,WordFreq != "AllFreq")
+results_highLow <- droplevels(results_highLow)
 
-#same for dprime, ie familiarity
-highlowFull.dfit.Sex.Age.Start.Clump.Freq.FreqClump <- lmer(dprime~(1|Participant)+Sex+Age+Bilingual+LowOrHighStart+ClumpedOrEven+Frequency+Frequency:ClumpedOrEven, data=highlowFull)
-highlowFull.dfit.Sex.Age.Start.Clump.Freq <- lmer(dprime~(1|Participant)+Sex+Age+Bilingual+LowOrHighStart+ClumpedOrEven+Frequency, data=highlowFull)
-summary(highlowFull.dfit.Sex.Age.Start.Clump.Freq.FreqClump)
-anova(highlowFull.dfit.Sex.Age.Start.Clump.Freq.FreqClump,highlowFull.dfit.Sex.Age.Start.Clump.Freq, test="Chisq")
-AIC(highlowFull.dfit.Sex.Age.Start.Clump.Freq.FreqClump)
-AIC(highlowFull.dfit.Sex.Age.Start.Clump.Freq)
-BIC(highlowFull.dfit.Sex.Age.Start.Clump.Freq.FreqClump)
-BIC(highlowFull.dfit.Sex.Age.Start.Clump.Freq)
+#Modeling R with word frequency, OrderCondition, and random slopes by participant. The mixed effects model will not converge if TimetoCompletion is included.
+Rfit.OrderCondition.WordFreq <- glmer(R~(1|ParticipantIdentifier)+OrderCondition+WordFreq, family = Gamma(link = log), data=results_highLow)
+summary(Rfit.OrderCondition.WordFreq)
 
-#same for AUROC
-highlowFull.auroc.Sex.Age.Start.Clump.Freq.FreqClump <- lmer(AUROC~(1|Participant)+Sex+Age+Bilingual+LowOrHighStart+ClumpedOrEven+Frequency+Frequency:ClumpedOrEven, data=highlowFull)
-highlowFull.auroc.Sex.Age.Start.Clump.Freq <- lmer(AUROC~(1|Participant)+Sex+Age+Bilingual+LowOrHighStart+ClumpedOrEven+Frequency, data=highlowFull)
-highlowFull.auroc.Sex.Age.Start.Freq <- lmer(AUROC~(1|Participant)+Sex+Age+Bilingual+LowOrHighStart+Frequency, data=highlowFull)
-summary(highlowFull.auroc.Sex.Age.Start.Clump.Freq)
-anova(highlowFull.auroc.Sex.Age.Start.Clump.Freq,highlowFull.auroc.Sex.Age.Start.Clump.Freq.FreqClump, test="Chisq")
-AIC(highlowFull.auroc.Sex.Age.Start.Clump.Freq.FreqClump)
-AIC(highlowFull.auroc.Sex.Age.Start.Clump.Freq)
-BIC(highlowFull.auroc.Sex.Age.Start.Clump.Freq.FreqClump)
-BIC(highlowFull.auroc.Sex.Age.Start.Clump.Freq)
+Rfit.OrderConditionXwordFreq <- glmer(R~(1|ParticipantIdentifier)+OrderCondition*WordFreq, family = Gamma(link = log), data=results_highLow)
+summary(Rfit.OrderConditionXwordFreq)
+
+anova(Rfit.OrderCondition.WordFreq, Rfit.OrderConditionXwordFreq, test="Chisq")
+
+#Model without OrderCondition for comparison
+Rfit.WordFreq <- glmer(R~(1|ParticipantIdentifier)+WordFreq, family = Gamma(link = log), data=results_highLow)
+summary(Rfit.WordFreq)
+
+anova(Rfit.OrderCondition.WordFreq, Rfit.WordFreq, test="Chisq")
+
+#Non-hierarchical model with WordFreq
+Rfit.Time.OrderCondition.WordFreq <- glm(R~OrderCondition+TimeToCompletion+WordFreq, family = Gamma(link = log), data=results_highLow)
+summary(Rfit.Time.OrderCondition.WordFreq)
+
+
+#The mixed effects model will not converge for dprime.
+dprimeFit.OrderCondition.WordFreq <- glmer(dprime~(1|ParticipantIdentifier)+OrderCondition+WordFreq, family = Gamma(link = log), data=results_highLow)
+summary(dprimeFit.OrderCondition.WordFreq)
+
+
+#Non-hierarchical models for dprime with WordFreq
+dprimeFit.Time.OrderCondition.WordFreq <- glm(dprime~OrderCondition+WordFreq+TimeToCompletion, family = Gamma(link = log), data=results_highLow)
+summary(dprimeFit.Time.OrderCondition.WordFreq)
+
+dprimeFit.Time.OrderConditionXwordFreq <- glm(dprime~OrderCondition*WordFreq+TimeToCompletion, family = Gamma(link = log), data=results_highLow)
+
+anova(dprimeFit.Time.OrderCondition.WordFreq,dprimeFit.Time.OrderConditionXwordFreq, test="Chisq")
+AIC(dprimeFit.Time.OrderCondition.WordFreq)
+AIC(dprimeFit.Time.OrderConditionXwordFreq)
+BIC(dprimeFit.Time.OrderCondition.WordFreq)
+BIC(dprimeFit.Time.OrderConditionXwordFreq)
+
+
+#Mixed effects model for AUROCnorm 
+AUROCfit.OrderCondition.WordFreq <- glmer(AUROCnorm~(1|ParticipantIdentifier)+OrderCondition+WordFreq+TimeToCompletion, family = Gamma(link = log), data=results_highLow)
+summary(AUROCfit.OrderCondition.WordFreq)
+
+#Non-hierarchical model for AUROCnorm 
+AUROCfit.OrderCondition.WordFreq.Time <- glm(AUROCnorm~OrderCondition+WordFreq+TimeToCompletion, family = Gamma(link = log), data=results_highLow)
+summary(AUROCfit.OrderCondition.WordFreq.Time)
+
+
