@@ -16,7 +16,12 @@ library(lme4)
 
 #####Current Dataset:
 ####Note that participants with TimetoCompletion < 12 or > 51 have been excluded, which are below 5th percentile and above the 95th percentile.
-results <- read.csv(file="~/constantentropy/memory/dataAug2021.csv", header=T)
+salsa <- read.csv(file="~/constantentropy/memory/dataAug2021.csv", header=T)
+taylor <- read.csv(file="~/CurrentLx/newcastleModules/MRes/taylor/resultsWordsSept2021.csv", header=T)
+#results <- read.csv(file="~/constantentropy/memory/dataAug2021.csv", header=T)
+
+#Combining the two datasets
+results <- rbind(select(salsa, -WorkerType),select(taylor, -ClumpCondition))
 results$TimeToCompletion <- as.numeric(as.character(results$TimeToCompletion))
 
 # Some initial processing. First of all, logs can't cope with 0s so replace these:
@@ -153,7 +158,7 @@ library(lmerTest)
 results_highLow <- subset(results,WordFreq != "AllFreq")
 results_highLow <- droplevels(results_highLow)
 
-#Modeling R with word frequency, OrderCondition, and random slopes by participant. The mixed effects model will not converge if TimetoCompletion is included.
+#Modeling R with word frequency, OrderCondition, and random intercepts by participant. The mixed effects model will not converge if TimetoCompletion is included.
 Rfit.OrderCondition.WordFreq <- glmer(R~(1|ParticipantIdentifier)+OrderCondition+WordFreq, family = Gamma(link = log), data=results_highLow)
 summary(Rfit.OrderCondition.WordFreq)
 
@@ -161,6 +166,10 @@ Rfit.OrderConditionXwordFreq <- glmer(R~(1|ParticipantIdentifier)+OrderCondition
 summary(Rfit.OrderConditionXwordFreq)
 
 anova(Rfit.OrderCondition.WordFreq, Rfit.OrderConditionXwordFreq, test="Chisq")
+
+#Test to see what happens without WordFreq even when the ROCs were estimated by word freq
+Rfit.OrderCondition <- glmer(R~(1|ParticipantIdentifier)+OrderCondition, family = Gamma(link = log), data=results_highLow)
+summary(Rfit.OrderCondition)
 
 #Model without OrderCondition for comparison
 Rfit.WordFreq <- glmer(R~(1|ParticipantIdentifier)+WordFreq, family = Gamma(link = log), data=results_highLow)
