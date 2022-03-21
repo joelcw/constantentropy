@@ -16,7 +16,7 @@ library(lme4)
 
 #####Current Dataset:
 ####Note that participants with TimetoCompletion < 12 or > 51 have been excluded, which are below 5th percentile and above the 95th percentile.
-salsa <- read.csv(file="~/constantentropy/memory/dataAug2021.csv", header=T)
+salsa <- read.csv(file="~/constantentropy/memory/salsaDataAug2021.csv", header=T)
 taylor <- read.csv(file="~/CurrentLx/newcastleModules/MRes/taylor/resultsWordsSept2021.csv", header=T)
 #results <- read.csv(file="~/constantentropy/memory/dataAug2021.csv", header=T)
 
