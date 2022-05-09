@@ -7,7 +7,7 @@ $CS infoTheoryTestV2.c $icepahc -out outputs/infoTheoryTestV2.ice.nodates.cod
 
 echo "done with query on IcePaHC"
 
-$CS dateGenreV2.ice.c outputs/infoTheoryTestV2.ice.nodates.cod -out outputs/infoTheoryTestV2.ice.cod
+$CS dateGenreV2.ice.c outputs/infoTheoryTestV2.ice.nodates.cod -out outputs/infoTheoryTestV2.ice.raw.cod
 
 echo "done with dating IcePaHC data"
 
