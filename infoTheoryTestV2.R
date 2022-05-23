@@ -74,7 +74,7 @@ p <- ggplot(objsbjIceNar.data, aes(Year, OV, color=V2)) +
 ggsave(p, file = "V2OVNar.png", width = 8, height = 5)
 
 #Simplifying further by leaving out quantified objects and gapped subjects:
-objsbjIceNar.data <- subset(objsbjIceNar.data, ObjType == "posobj")
+objsbjIceNar.data <- subset(objsbjIceNar.data, ObjType != "qobj")
 objsbjIceNar.data <- subset(objsbjIceNar.data, SbjType != "gapsbj")
 objsbjIceNar.data <- droplevels(objsbjIceNar.data)
 
@@ -90,10 +90,13 @@ ggplot(objsbjIceNar.data, aes(Year, OV, color=V2)) +
   theme_bw() + theme(panel.border = element_blank())
 
 
-
-
-###Little test
+###Preliminary test, from the abstract (the original query only included nominal sbj and pos objs)
 library(lme4)
+
+objsbjIceNar.data <- subset(objsbjIceNar.data, ObjType == "posobj")
+objsbjIceNar.data <- subset(objsbjIceNar.data, SbjType != "gapsbj")
+objsbjIceNar.data <- droplevels(objsbjIceNar.data)
+
 objsbjIceNar.data$zYear <- scale(objsbjIceNar.data$Year, center=TRUE, scale=TRUE)
 basic.fit <- glm(OV~V2+zYear+V2:zYear, family = binomial, data=objsbjIceNar.data)
 objsbjice.data$zYear <- scale(objsbjice.data$Year, center=TRUE, scale=TRUE)
@@ -103,21 +106,23 @@ summary(basic.fit)
 
 
 
-###same for religious texts only
 
-objsbjNOinvqIceRel.data <- subset(objsbjNOinvqIce.data, Genre == "rel")
+###Mixed effects, testing CRE
+library(lme4)
+objsbjice.data$zYear <- scale(objsbjice.data$Year, center=TRUE, scale=TRUE)
 
-objsbjNOinvqIceRel.data <- droplevels(objsbjNOinvqIceRel.data)
+#CONVERGING: at least shows that V2 doesn't affect OV in a vacuum
+noInter.fit <- glmer(OV~(1|ID)+V2+SbjType+ObjType+zYear+SimpleGenre, family = binomial, objsbjice.data)
+summary(noInter.fit)
+twoWayInters.fit <- glmer(OV~(1|ID)+SbjType*V2+ObjType*V2+V2*zYear+SimpleGenre:zYear, family = binomial, objsbjice.data)
+summary(twoWayInters.fit)
 
-p <- ggplot(objsbjNOinvqIceRel.data, aes(Year, OV, color=SbjType)) + 
-  labs(y = "Proportion of OV", x = "\nYear") + 
-  stat_sum(aes(size=..n.., alpha=.1)) + 
-  scale_size_area(max_size=12) + 
-  stat_smooth() + 
-  scale_alpha_continuous(guide="none", limits = c(0,.7)) + 
-  scale_color_brewer(palette = "Set1") + 
-  ylim(0,1) + 
-  facet_grid(ObjType~Clause) +
-  theme_bw() + theme(panel.border = element_blank())
+#NOT CONVERGING
+someInter.fit <- glmer(OV~(1|ID)+V2+SbjType*ObjType+zYear+SimpleGenre, family = binomial, objsbjice.data)
+someInter.fit <- glmer(OV~(1|ID)+V2*SbjType+ObjType+zYear+SimpleGenre, family = binomial, objsbjice.data)
+someInter.fit <- glmer(OV~(1|ID)+SbjType+V2*ObjType+zYear+SimpleGenre, family = binomial, objsbjice.data)
+twoWayInters.fit <- glmer(OV~(1|ID)+SbjType*V2+ObjType*V2+V2*zYear+SimpleGenre:zYear, family = binomial, objsbjice.data)
 
-ggsave(p, file = "infoTheory.objsbjmatsubRel.Ice.pdf", width = 8, height = 5)
+
+basicInter.fit <- glm(OV~V2*zYear*SbjType*ObjType*SimpleGenre, family = binomial, data=objsbjice.data)
+summary(basicInter.fit)
