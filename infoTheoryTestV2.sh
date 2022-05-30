@@ -13,13 +13,13 @@ echo "done with dating IcePaHC data"
 
 #Some things are commented out below so that we can make a raw version with full IDs that Anton can use
 
-#rm outputs/infoTheoryTestV2.ice.cod.ooo
+rm outputs/infoTheoryTestV2.ice.raw.cod.ooo
 $CS codes.q outputs/infoTheoryTestV2.ice.raw.cod
 
 echo "Done with study on icepahc"
 
-#python fixIdFormat.py < outputs/infoTheoryTestV2.ice.cod.ooo > outputs/infoTheoryTestV2.ice.cod.ooo.tmp
-#mv outputs/infoTheoryTestV2.ice.cod.ooo.tmp outputs/infoTheoryTestV2.ice.cod.ooo
+python fixIdFormat.py < outputs/infoTheoryTestV2.ice.raw.cod.ooo > outputs/infoTheoryTestV2.ice.cod.ooo.tmp
+mv outputs/infoTheoryTestV2.ice.cod.ooo.tmp outputs/infoTheoryTestV2.ice.IDfixed.cod.ooo
 
 echo "Fixed codes"
 
