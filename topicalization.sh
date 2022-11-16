@@ -28,7 +28,7 @@ $CS codes.q outputs/ipmat-obj-sbj-vfin.eb.cod
 
 echo "Done with query on ppche"
 
-python3 fixIdFormat.py < outputs/ipmat-obj-sbj-vfin.eb.cod.ooo > outputs/ipmat-obj-sbj-vfin.eb.cod.ooo.tmp
+python3 fixIdFormat.eng.py < outputs/ipmat-obj-sbj-vfin.eb.cod.ooo > outputs/ipmat-obj-sbj-vfin.eb.cod.ooo.tmp
 mv outputs/ipmat-obj-sbj-vfin.eb.cod.ooo.tmp outputs/ipmat-obj-sbj-vfin.eb.cod.ooo
 
 echo "Fixed codes"

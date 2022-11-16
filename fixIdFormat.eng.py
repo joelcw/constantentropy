@@ -17,4 +17,4 @@ lines = sys.stdin.readlines()
 
 for line in lines:
     new = idregex.sub(textid,line)
-    sys.stdout.write(new)
+    sys.stdout.write(new.lower())
