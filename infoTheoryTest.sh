@@ -25,7 +25,7 @@ $CS codes.q outputs/infoTheoryTest.ymeb.cod
 
 "Done with query on ppche"
 
-python fixIdFormat.py < outputs/infoTheoryTest.ymeb.cod.ooo > outputs/infoTheoryTest.ymeb.cod.ooo.tmp
+python fixIdFormat.eng.py < outputs/infoTheoryTest.ymeb.cod.ooo > outputs/infoTheoryTest.ymeb.cod.ooo.tmp
 mv outputs/infoTheoryTest.ymeb.cod.ooo.tmp outputs/infoTheoryTest.ymeb.cod.ooo
 
 echo "Fixed codes"
@@ -49,7 +49,7 @@ $CS codes.q outputs/infoTheoryTest.ice.cod
 
 echo "Done with study on icepahc"
 
-python fixIdFormat.py < outputs/infoTheoryTest.ice.cod.ooo > outputs/infoTheoryTest.ice.cod.ooo.tmp
+python fixIdFormat.ice.py < outputs/infoTheoryTest.ice.cod.ooo > outputs/infoTheoryTest.ice.cod.ooo.tmp
 mv outputs/infoTheoryTest.ice.cod.ooo.tmp outputs/infoTheoryTest.ice.cod.ooo
 
 echo "Fixed codes"

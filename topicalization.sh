@@ -20,20 +20,20 @@ tychobrahe="/home/joelcw/CurrentLx/OldNorse/tychobrahe/*psd.txt"
 #Run Study on PPCHE
 
 
-rm ipmat-obj-sbj-vfin.eb.cod
+rm outputs/ipmat-obj-sbj-vfin.eb.cod
 $CS ipmat-obj-sbj-vfin.c $ppceme $ppcmbe -out outputs/ipmat-obj-sbj-vfin.eb.cod
 
-rm ipmat-obj-sbj-vfin.eb.cod.ooo
+rm outputs/ipmat-obj-sbj-vfin.eb.cod.ooo
 $CS codes.q outputs/ipmat-obj-sbj-vfin.eb.cod
 
-"Done with query on ppche"
+echo "Done with query on ppche"
 
-python fixIdFormat.py < outputs/ipmat-obj-sbj-vfin.eb.cod.ooo > outputs/ipmat-obj-sbj-vfin.eb.cod.ooo.tmp
+python3 fixIdFormat.py < outputs/ipmat-obj-sbj-vfin.eb.cod.ooo > outputs/ipmat-obj-sbj-vfin.eb.cod.ooo.tmp
 mv outputs/ipmat-obj-sbj-vfin.eb.cod.ooo.tmp outputs/ipmat-obj-sbj-vfin.eb.cod.ooo
 
 echo "Fixed codes"
 
-python mergeMetaPpche.py < outputs/ipmat-obj-sbj-vfin.eb.cod.ooo > outputs/ipmat-obj-sbj-vfin.eb.cod.ooo.tmp1
+python3 mergeMetaPpche.py < outputs/ipmat-obj-sbj-vfin.eb.cod.ooo > outputs/ipmat-obj-sbj-vfin.eb.cod.ooo.tmp1
 mv outputs/ipmat-obj-sbj-vfin.eb.cod.ooo.tmp1 outputs/ipmat-obj-sbj-vfin.eb.cod.ooo
 
 echo "added metadata, done with study on ppche"
