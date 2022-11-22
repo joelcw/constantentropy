@@ -22,7 +22,7 @@ for l in lines:
     codes = l.split(":")
     id = codes[len(codes)-1].strip()
     ii = 0
-    while ii <= len(codes)-3:
+    while ii <= len(codes)-2:
         sys.stdout.write("%s:" % codes[ii])
         ii=ii+1
 

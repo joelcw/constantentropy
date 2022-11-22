@@ -33,7 +33,7 @@ mv outputs/ipmat-obj-sbj-vfin.eb.cod.ooo.tmp outputs/ipmat-obj-sbj-vfin.eb.cod.o
 
 echo "Fixed codes"
 
-python3 mergeMetaPpche.py < outputs/ipmat-obj-sbj-vfin.eb.cod.ooo > outputs/ipmat-obj-sbj-vfin.eb.cod.ooo.tmp1
+python3 mergeMetaPpcheGeneral.py < outputs/ipmat-obj-sbj-vfin.eb.cod.ooo > outputs/ipmat-obj-sbj-vfin.eb.cod.ooo.tmp1
 mv outputs/ipmat-obj-sbj-vfin.eb.cod.ooo.tmp1 outputs/ipmat-obj-sbj-vfin.eb.cod.ooo
 
 echo "added metadata, done with study on ppche"
