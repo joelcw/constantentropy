@@ -10,9 +10,9 @@ coding_query:
 // 1: fronting
 // 0: no fronting
 1: {
- \1: (IP-MAT* idoms finite_verb) AND (IP-MAT* idoms [1]object) AND (IP-MAT* idoms NP-NOM*|NP-SBJ*) AND ([1]object precedes NP-NOM*|NP-SBJ*) AND (NP-NOM*|NP-SBJ* precedes finite_verb) AND (IP-MAT* idoms !NP-OB2)
+ \1: (IP-MAT* idoms finite_verb) AND (IP-MAT* idoms [1]object) AND (IP-MAT* idoms NP-NOM*|NP-SBJ*) AND ([1]object precedes NP-NOM*|NP-SBJ*) AND (NP-NOM*|NP-SBJ* precedes finite_verb) AND (IP-MAT* idoms !NP-OB2) AND (IP-MAT* idoms V*|H*|D*)
       
-    \0: (IP-MAT* idoms finite_verb) AND (IP-MAT* idoms [1]object) AND (IP-MAT* idoms NP-NOM*|NP-SBJ*) AND (NP-NOM*|NP-SBJ* precedes finite_verb) AND (finite_verb precedes [1]object) AND (IP-MAT* idoms !NP-OB2)
+    \0: (IP-MAT* idoms finite_verb) AND (IP-MAT* idoms [1]object) AND (IP-MAT* idoms NP-NOM*|NP-SBJ*) AND (NP-NOM*|NP-SBJ* precedes finite_verb) AND (finite_verb precedes [1]object) AND (IP-MAT* idoms !NP-OB2) AND (IP-MAT* idoms V*|H*|D*)
 
 	z: ELSE
 }
