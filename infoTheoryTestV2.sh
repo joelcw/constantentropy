@@ -19,7 +19,8 @@ $CS codes.q outputs/infoTheoryTestV2.ice.raw.cod
 echo "Done with study on icepahc"
 
 python fixIdFormat.ice.py < outputs/infoTheoryTestV2.ice.raw.cod.ooo > outputs/infoTheoryTestV2.ice.cod.ooo.tmp
-mv outputs/infoTheoryTestV2.ice.cod.ooo.tmp outputs/infoTheoryTestV2.ice.IDfixed.cod.ooo
+mv outputs/infoTheoryTestV2.ice.treeIDandIDfixed.cod.ooo outputs/infoTheoryTestV2.ice.treeIDandIDfixed.cod.ooo.old
+mv outputs/infoTheoryTestV2.ice.cod.ooo.tmp outputs/infoTheoryTestV2.ice.treeIDandIDfixed.cod.ooo
 
 echo "Fixed codes"
 

@@ -1,3 +1,4 @@
+#Modified 3May2023 to use the infoTheoryTestV2.ice.treeIDandIDfixed.ooo file instead of infoTheoryTestV2.ice.IDfixed.cod.ooo
 library(ggplot2)
 library(plyr)
 library(gdata)
@@ -32,10 +33,10 @@ objsbjicePPs.data <- droplevels(objsbjicePPs.data)
 "finished droplevels"
 
 ###Trying to get DORMS by merging with old output file that has the DORMS
-dormOutput <- read.delim("~/iceBits/ovCodingTreeAndClauseDormuido.tsv",header=T,sep="\t")
-dorm.df <- data.frame(dormOutput$TextId,dormOutput$TreeId,dormOutput$SentDormUido)
-colnames(dorm.df) <- c("ID","TreeID","SentDormUido")
-fulldata <- merge(objsbjice.data, dormOutput, by=c("ID","TreeID"), all.x=TRUE, all.y=FALSE)
+#dormOutput <- read.delim("~/iceBits/ovCodingTreeAndClauseDormuido.tsv",header=T,sep="\t")
+#dorm.df <- data.frame(dormOutput$TextId,dormOutput$TreeId,dormOutput$SentDormUido)
+#colnames(dorm.df) <- c("ID","TreeID","SentDormUido")
+#fulldata <- merge(objsbjice.data, dormOutput, by=c("ID","TreeID"), all.x=TRUE, all.y=FALSE)
 
 
 ####Make sure dates abd 0/1 codes are stored as numbers, and weights
