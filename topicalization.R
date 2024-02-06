@@ -1,7 +1,7 @@
 library(ggplot2)
 library(plyr)
 library(gdata)
-
+library(lme4)
 
 ####Read the file of CorpusSearch codes into an R data frame.
 
@@ -113,17 +113,17 @@ basic.fit <- glmer(Top~(1|Text)+zYear+SbjType+ObjType+SbjType*zYear+ObjType*zYea
 summary(basic.fit)
 
 #Non-hierarchical, because 2-way and 3-ways weren't converging with mixed:
-no3way.fit <- glm(Top~zYear+SbjType+ObjType+SbjType*ObjTyp*zYear, family = binomial, data=nondem.df)
-summary(inter.fit)
+no3way.fit <- glm(Top~zYear+SbjType+ObjType+SbjType*ObjType*zYear, family = binomial, data=nondemsbj.df)
+summary(no3way.fit)
 
 #Again, but only after 1700
 nondemsbj1742.df <- nondemsbj.df[nondemsbj.df$Year > 1742,]
 nondemsbj1742.df$zYear <- scale(nondemsbj1742.df$Year, center=TRUE, scale=TRUE)
 
-yearInter1742.fit <- glmer(Top~(1|Text)+zYear+SbjType+ObjType+SbjType*zYear+ObjType*zYear, family = binomial, data=nondemsbj1742.df)
+yearInter1742.fit <- glmer(Top~(1|Text)+zYear+SbjType*ObjType+SbjType*zYear+ObjType*zYear, family = binomial, data=nondemsbj1742.df)
 summary(yearInter1742.fit)
 
-noYear1742.fit <- glmer(Top~(1|Text)+SbjType+ObjType, family = binomial, data=nondemsbj1742.df)
+noYear1742.fit <- glmer(Top~(1|Text)+SbjType*ObjType, family = binomial, data=nondemsbj1742.df)
 anova(yearInter1742.fit, noYear1742.fit,test="Chisq")
 
 #basic1742.fit <- glmer(Top~(1|Text)+zYear+SbjType+ObjType, family = binomial, data=nondemsbj1742.df)
@@ -143,3 +143,6 @@ ggplot(plot.data[plot.data$Year2 > 1742,], aes(Year2, fronted, color=SbjType, gr
   scale_color_brewer(palette = "Set1") + 
   ylim(0,0.07) + 
   theme_bw() + theme(panel.border = element_blank())
+
+####Speyer's data
+topCounts.df <- data.frame(expand.grid(Order=order,Period=period,Count = 0))
