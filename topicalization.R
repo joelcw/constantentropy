@@ -145,4 +145,5 @@ ggplot(plot.data[plot.data$Year2 > 1742,], aes(Year2, fronted, color=SbjType, gr
   theme_bw() + theme(panel.border = element_blank())
 
 ####Speyer's data
+
 topCounts.df <- data.frame(expand.grid(Order=order,Period=period,Count = 0))

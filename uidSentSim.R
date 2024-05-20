@@ -388,3 +388,10 @@ write.csv(propnoise.df,file = "~/constantentropy/uid_sentSimOneWordNoises.csv", 
 propnoise.df <- read.csv(file = "~/constantentropy/uid_sentSimOneWordNoises.csv", header=T)
 
 propnoise.df$stringtypes <- ordered(propnoise.df$stringtypes, levels = c("asymmetric","randomized","original","uido-optimized"))
+
+
+#####Value At Risk (VaR) with 3-word noise
+
+1 - (nrow(propnoise.df[propnoise.df$stringtypes == "original" & propnoise.df$noises >= 0.563,]) / nrow(propnoise.df[propnoise.df$stringtypes == "original",]))
+
+1 - (nrow(propnoise.df[propnoise.df$stringtypes == "uido-optimized" & propnoise.df$noises >= 0.42,]) / nrow(propnoise.df[propnoise.df$stringtypes == "uido-optimized",]))
