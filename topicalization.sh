@@ -40,3 +40,9 @@ echo "added metadata, done with study on ppche"
 
 
 #Add Dorms from dormCorpus based on the ID code for each observation
+
+python3 addDormsToCodes.py < outputs/ipmat-obj-sbj-vfin.eb.cod.ooo > outputs/ipmat-obj-sbj-vfin.eb.cod.ooo.tmp1
+cp outputs/ipmat-obj-sbj-vfin.eb.cod.ooo outputs/ipmat-obj-sbj-vfin.eb.cod.ooo.old
+mv outputs/ipmat-obj-sbj-vfin.eb.cod.ooo.tmp1 outputs/ipmat-obj-sbj-vfin.eb.cod.ooo
+
+echo "added dorms"

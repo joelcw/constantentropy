@@ -10,7 +10,7 @@ foo <- read.delim("~/constantentropy/outputs/ipmat-obj-sbj-vfin.eb.cod.ooo",head
 
 ####Give appropriate column names to the columns
 
-colnames(foo) <- c("Top","ObjType","SbjType","Text","Year")
+colnames(foo) <- c("Top","ObjType","SbjType","ID","Text","Year","CalDorm")
 
 ####Throw out all the codes that refer to tokens that are irrelevant for the study. Also throw out Nwe Test translation because it's an outlier, 
 

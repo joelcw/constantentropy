@@ -8,7 +8,7 @@ observations = sys.stdin.readlines()
 
 #Create a dictionary with DORM and ID for every token in the ppceme and ppcmbe
 
-dormDictFile = open("butts","r")
+dormDictFile = open("calDormsPpcemeMbe.txt","r")
 dormDictLines = dormDictFile.readlines()
 
 dormDict = {}
@@ -19,7 +19,7 @@ for l in dormDictLines:
 
 
 for obs in observations:
-    codes = l.split(":")
+    codes = obs.split(":")
     id = codes[len(codes)-3].strip()
     dorm = dormDict[id]
     for c in codes:
