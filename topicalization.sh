@@ -37,3 +37,6 @@ python3 mergeMetaPpcheGeneral.py < outputs/ipmat-obj-sbj-vfin.eb.cod.ooo > outpu
 mv outputs/ipmat-obj-sbj-vfin.eb.cod.ooo.tmp1 outputs/ipmat-obj-sbj-vfin.eb.cod.ooo
 
 echo "added metadata, done with study on ppche"
+
+
+#Add Dorms from dormCorpus based on the ID code for each observation
