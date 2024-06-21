@@ -2,10 +2,11 @@ library(ggplot2)
 library(plyr)
 library(gdata)
 library(lme4)
+library(lmerTest)
 
 ####Read the file of CorpusSearch codes into an R data frame.
 
-foo <- read.delim("~/constantentropy/outputs/ipmat-obj-sbj-vfin.eb.cod.ooo",header=F,sep=":")
+foo <- read.delim("~/constantentropy/outputs/ipmat-obj-sbj-vfin.eb.cod.ooo.dorm",header=F,sep=":")
 
 
 ####Give appropriate column names to the columns
@@ -29,7 +30,7 @@ top.data <- droplevels(top.data)
 
 top.data$Year <- as.numeric(as.character(top.data$Year))
 top.data$Top <- as.numeric(as.character(top.data$Top))
-
+top.data$CalDorm <- as.numeric(as.character(top.data$CalDorm))
 
 "finished converting to numeric"
 
@@ -101,7 +102,7 @@ p <- ggplot(plot.data, aes(Year2, fronted, color=SbjType, group=SbjType)) +
 ggsave(p, file = "~/constantentropy/ittalks/objTop.png", width = 8, height = 5)
 ####NOTE: the dmsbj nomobj fronted is only 1 out of 25 token in 1500 and 1 out of 70 in 1650
 
-library(lme4)
+
 
 #Looking at non-dem sbjs:
 nondemsbj.df <- subset(nondem.df,SbjType != "demsbj")
@@ -113,8 +114,19 @@ basic.fit <- glmer(Top~(1|Text)+zYear+SbjType+ObjType+SbjType*zYear+ObjType*zYea
 summary(basic.fit)
 
 #Non-hierarchical, because 2-way and 3-ways weren't converging with mixed:
-no3way.fit <- glm(Top~zYear+SbjType+ObjType+SbjType*ObjType*zYear, family = binomial, data=nondemsbj.df)
+3way.fit <- glm(Top~zYear+SbjType+ObjType+SbjType*ObjType*zYear, family = binomial, data=nondemsbj.df)
+summary(3way.fit)
+no3way.fit <- glm(Top~zYear+SbjType+ObjType+SbjType*ObjType, family = binomial, data=nondemsbj.df)
 summary(no3way.fit)
+
+#Relevel so we can see accent clash; REPORT
+nondemsbj.df$SbjType <- relevel(nondemsbj.df$SbjType, ref="pronsbj")
+nondemsbj.df$ObjType <- relevel(nondemsbj.df$ObjType, ref="pronobj")
+
+#Relevel so you can see effect of both pronouns when there's no accent clash; REPORT
+nondemsbj.df$SbjType <- relevel(nondemsbj.df$SbjType, ref="nomsbj")
+nondemsbj.df$ObjType <- relevel(nondemsbj.df$ObjType, ref="nomobj")
+
 
 #Again, but only after 1700
 nondemsbj1742.df <- nondemsbj.df[nondemsbj.df$Year > 1742,]
@@ -132,7 +144,7 @@ anova(basic1742.fit, noYear1742.fit,test="Chisq")
 
 
 
-ggplot(plot.data[plot.data$Year2 > 1742,], aes(Year2, fronted, color=SbjType, group=SbjType)) + 
+q <- ggplot(plot.data[plot.data$Year2 > 1742,], aes(Year2, fronted, color=SbjType, group=SbjType)) + 
   labs(y = "Proportion of Obj Fronting", x = "\nYear") + 
   #  scale_alpha_continuous(guide="none", limits = c(0,0.1)) +
   scale_size_area(max_size=5) +
@@ -144,6 +156,42 @@ ggplot(plot.data[plot.data$Year2 > 1742,], aes(Year2, fronted, color=SbjType, gr
   ylim(0,0.07) + 
   theme_bw() + theme(panel.border = element_blank())
 
-####Speyer's data
+ggsave(q, file = "~/CurrentLx/infoTheory/manchesterInfo/objTop1750.png", width = 8, height = 5)
 
-topCounts.df <- data.frame(expand.grid(Order=order,Period=period,Count = 0))
+####Adding in DORM; Report
+basicDorm.fit <- glmer(Top~(1|Text)+zYear+SbjType+ObjType+ObjType*SbjType+CalDorm, family = binomial, data=nondemsbj.df)
+summary(basicDorm.fit)
+
+DormWithoutObjSbjInter.fit <- glmer(Top~(1|Text)+zYear+SbjType+ObjType+CalDorm, family = binomial, data=nondemsbj.df)
+summary(DormWithoutObjSbjInter.fit)
+
+#Report
+onlyDorm.fit <- glmer(Top~(1|Text)+zYear*CalDorm, family = binomial, data=nondemsbj.df)
+summary(onlyDorm.fit)
+
+
+
+
+nondemsbj.df$Top <- as.factor(nondemsbj.df$Top)
+#Note that dormuido is stable over time, and Year is not significant in any model below.
+p <- ggplot(nondemsbj.df, aes(Year, CalDorm, color=Top)) + 
+  labs(y = "Calibrated DORM (bits) of Sentence", x = "\nYear") +
+  #  geom_line() +
+  geom_point(alpha=0.01) +
+  geom_smooth() +
+  facet_wrap(~SbjType) +
+  scale_color_brewer(palette = "Set1") + 
+  theme_bw() + theme(panel.border = element_blank())
+
+ggsave(p, file = "~/CurrentLx/infoTheory/manchesterInfo/dormOverTimeByTop.png", width = 8.09, height = 5)
+
+###Modelling the DORMS
+nondemsbj.df$SbjType <- relevel(nondemsbj.df$SbjType, ref="pronsbj")
+nondemsbj.df$ObjType <- relevel(nondemsbj.df$ObjType, ref="pronobj")
+dorms.fit <- lmer(CalDorm~(1|Text)+Top+zYear+SbjType+ObjType+SbjType*Top*zYear, data=nondemsbj.df)
+summary(dorms.fit)
+
+####Report
+dormsWithout3way.fit <- lmer(CalDorm~(1|Text)+Top+zYear+SbjType+ObjType+SbjType*Top+Top*zYear, data=nondemsbj.df)
+summary(dormsWithout3way.fit)
+anova(dorms.fit,dormsWithout3way.fit, test="Chisq")

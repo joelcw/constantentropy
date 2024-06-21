@@ -23,6 +23,6 @@ for obs in observations:
     id = codes[len(codes)-3].strip()
     dorm = dormDict[id]
     for c in codes:
-        sys.stdout.write("%s:" % c)
+        sys.stdout.write("%s:" % c.strip())  #strips newline that the mergeMeta script adds when it adds the year.
 
     sys.stdout.write("%s\n" % dorm)
