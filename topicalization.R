@@ -169,16 +169,21 @@ summary(DormWithoutObjSbjInter.fit)
 onlyDorm.fit <- glmer(Top~(1|Text)+zYear*CalDorm, family = binomial, data=nondemsbj.df)
 summary(onlyDorm.fit)
 
-
+objSbj.fit <- glmer(Top~(1|Text)+zYear+SbjType*ObjType, family = binomial, data=nondemsbj.df)
+summary(objSbj.fit)
+AIC(onlyDorm.fit)-AIC(objSbj.fit)
+BIC(onlyDorm.fit)-BIC(objSbj.fit)
+AIC(onlyDorm.fit)
 
 
 nondemsbj.df$Top <- as.factor(nondemsbj.df$Top)
 #Note that dormuido is stable over time, and Year is not significant in any model below.
 p <- ggplot(nondemsbj.df, aes(Year, CalDorm, color=Top)) + 
-  labs(y = "Calibrated DORM (bits) of Sentence", x = "\nYear") +
+  labs(y = "Calibrated DORM (bits{^2}) of Sentence", x = "\nYear") +
   #  geom_line() +
   geom_point(alpha=0.01) +
   geom_smooth() +
+  ylim(0,35) +
   facet_wrap(~SbjType) +
   scale_color_brewer(palette = "Set1") + 
   theme_bw() + theme(panel.border = element_blank())
