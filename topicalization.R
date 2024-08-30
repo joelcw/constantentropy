@@ -114,8 +114,8 @@ basic.fit <- glmer(Top~(1|Text)+zYear+SbjType+ObjType+SbjType*zYear+ObjType*zYea
 summary(basic.fit)
 
 #Non-hierarchical, because 2-way and 3-ways weren't converging with mixed:
-3way.fit <- glm(Top~zYear+SbjType+ObjType+SbjType*ObjType*zYear, family = binomial, data=nondemsbj.df)
-summary(3way.fit)
+ThreeWay.fit <- glm(Top~zYear+SbjType+ObjType+SbjType*ObjType*zYear, family = binomial, data=nondemsbj.df)
+summary(ThreeWay.fit)
 no3way.fit <- glm(Top~zYear+SbjType+ObjType+SbjType*ObjType, family = binomial, data=nondemsbj.df)
 summary(no3way.fit)
 
