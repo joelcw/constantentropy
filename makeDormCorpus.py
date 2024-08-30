@@ -1,4 +1,5 @@
-#Uses eccoPpcemePpcmbeFreqDict.txt to take ppche corpus pos files, and output a file with info content values, calibrated DORM, and IDs
+#30Aug2024 Uses combinedEeboEccoPpcemeMbeFreqDict.txt from combinePyccleAndEccoPpcemePPcmbeFreqDicts.py to take ppche corpus pos files, and output a file with info content values, calibrated DORM, and IDs
+#Note older version used eccoPpcemePpcmbeFreqDict.txt, which did not include the EEBO freqs from Seth
 
 import sys,string,re,urllib.request, contractions
 
@@ -29,7 +30,8 @@ wordTag = re.compile("(.*)/(.*)")
 
 #Create a dictionary with info content for each word:
 
-freqDictFile = open("eccoPpcemeMbeFreqDict.txt","r")
+#freqDictFile = open("eccoPpcemePpcmbeFreqDict.txt","r")
+freqDictFile = open("combinedEeboEccoPpcemeMbeFreqDict.txt","r")
 freqDictLines = freqDictFile.readlines()
 
 freqDict = {}
