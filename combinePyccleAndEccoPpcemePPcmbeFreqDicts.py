@@ -25,19 +25,21 @@ sethFreqDict = {}
 #In addition to storing these, they must be converted from raw occurrences to bits, with total words = 1529672290
 #Note that we are leaving punctuation in the counts for now, but this could be a mistake
 
-total = 1529672290
+total = float(1529672290)
 
 for l in sethFreqDictLines:
     wordFreq = l.split()
-    prob = float(wordFreq[1]/total)
+    prob = float(float(wordFreq[1])/total)
     bit = np.log2(1/prob)
-    sethFreqDict[wordFreq[0]] = float(bit)
+    sethFreqDict[wordFreq[0]] = bit
+    
 
     
 #combine the dictionaries by appending all items that are in eccoEtc but not in sethFreqDict to sethFreqDict
 
 for item in eccoEtcFreqDict:
     if item not in sethFreqDict:
+        print(item)
         sethFreqDict[item] = eccoEtcFreqDict[item]
 
 #output in the same format as earlier
@@ -45,6 +47,6 @@ for item in eccoEtcFreqDict:
 outfile = open("combinedEeboEccoPpcemeMbeFreqDict.txt","w")
 
 for word in sethFreqDict:
-    outfile.write("%s\t%s\n" % (word,bit))
+    outfile.write("%s\t%s\n" % (word,sethFreqDict[word]))
 
 outfile.close()
